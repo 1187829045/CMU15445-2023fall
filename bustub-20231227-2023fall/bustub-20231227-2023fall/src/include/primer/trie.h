@@ -61,9 +61,7 @@ class TrieNode {
   // 一个子节点映射，其中键是键中的下一个字符，值是下一个 TrieNode。
   // 你必须在此结构中存储子节点信息。不允许从结构中删除 `const`。
   std::map<char, std::shared_ptr<const TrieNode>> children_;
-  auto HasChild(const char &c) const ->bool{
-  return children_.find(c)!=children_.end();
-  }
+  auto HasChild(const char &c) const -> bool { return children_.find(c) != children_.end(); }
 
   auto GetChildNode(const char &c) const -> std::shared_ptr<const TrieNode> {
     if (!HasChild(c)) {
@@ -101,7 +99,8 @@ class TrieNodeWithValue : public TrieNode {
   std::shared_ptr<T> value_;
 };
 
-// 一个 Trie 是将字符串映射到类型为 T 的值的数据结构。对 Trie 的所有操作都不应修改 Trie 本身。应尽可能地重用现有节点，并创建新节点来表示新 Trie。
+// 一个 Trie 是将字符串映射到类型为 T 的值的数据结构。对 Trie 的所有操作都不应修改 Trie
+// 本身。应尽可能地重用现有节点，并创建新节点来表示新 Trie。
 //
 // 你不允许在此项目中删除任何 `const`，或使用 `mutable` 来绕过 const 检查。
 class Trie {
