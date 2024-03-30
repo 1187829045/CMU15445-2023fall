@@ -13,7 +13,7 @@ auto TrieStore::Get(std::string_view key) -> std::optional<ValueGuard<T>> {
   auto cur_root = root_;
   root_lock_.unlock();
   auto value = cur_root.Get<T>(key);
-   if (value == nullptr) {
+  if (value == nullptr) {
     return std::nullopt;
   }
   return {ValueGuard<T>(std::move(cur_root), *value)};
