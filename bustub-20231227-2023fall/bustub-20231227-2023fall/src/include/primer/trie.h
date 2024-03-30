@@ -14,7 +14,7 @@
 
 namespace bustub {
 
-/// A special type that will block the move constructor and move assignment operator. Used in TrieStore tests.
+/// 一个特殊的类型，将阻止移动构造函数和移动赋值运算符。在 TrieStore 测试中使用。
 class MoveBlocked {
  public:
   explicit MoveBlocked(std::future<int> wait) : wait_(std::move(wait)) {}
@@ -40,96 +40,99 @@ class MoveBlocked {
   std::future<int> wait_;
 };
 
-// A TrieNode is a node in a Trie.
+// 一个 TrieNode 是 Trie 中的一个节点。
 class TrieNode {
  public:
-  // Create a TrieNode with no children.
+  // 创建一个没有子节点的 TrieNode。
   TrieNode() = default;
 
-  // Create a TrieNode with some children.
+  // 创建一个带有一些子节点的 TrieNode。
   explicit TrieNode(std::map<char, std::shared_ptr<const TrieNode>> children) : children_(std::move(children)) {}
 
   virtual ~TrieNode() = default;
 
-  // Clone returns a copy of this TrieNode. If the TrieNode has a value, the value is copied. The return
-  // type of this function is a unique_ptr to a TrieNode.
+  // Clone 返回此 TrieNode 的副本。如果 TrieNode 包含值，则该值被复制。此函数的返回类型是指向 TrieNode 的 unique_ptr。
   //
-  // You cannot use the copy constructor to clone the node because it doesn't know whether a `TrieNode`
-  // contains a value or not.
+  // 你不能使用复制构造函数来克隆节点，因为它不知道 `TrieNode` 是否包含值。
   //
-  // Note: if you want to convert `unique_ptr` into `shared_ptr`, you can use `std::shared_ptr<T>(std::move(ptr))`.
+  // 注意：如果你想将 `unique_ptr` 转换为 `shared_ptr`，可以使用 `std::shared_ptr<T>(std::move(ptr))`。
   virtual auto Clone() const -> std::unique_ptr<TrieNode> { return std::make_unique<TrieNode>(children_); }
 
-  // A map of children, where the key is the next character in the key, and the value is the next TrieNode.
-  // You MUST store the children information in this structure. You are NOT allowed to remove the `const` from
-  // the structure.
+  // 一个子节点映射，其中键是键中的下一个字符，值是下一个 TrieNode。
+  // 你必须在此结构中存储子节点信息。不允许从结构中删除 `const`。
   std::map<char, std::shared_ptr<const TrieNode>> children_;
+  auto HasChild(const char &c) const ->bool{
+  return children_.find(c)!=children_.end();
+  }
 
-  // Indicates if the node is the terminal node.
+  auto GetChildNode(const char &c) const -> std::shared_ptr<const TrieNode> {
+    if (!HasChild(c)) {
+      return nullptr;
+    }
+    return children_.find(c)->second;
+  }
+  // 表示节点是否为终端节点。
   bool is_value_node_{false};
 
-  // You can add additional fields and methods here except storing children. But in general, you don't need to add extra
-  // fields to complete this project.
+  // 你可以在此处添加额外的字段和方法，除了存储子节点之外。但一般来说，你不需要添加额外的字段来完成此项目。
 };
 
-// A TrieNodeWithValue is a TrieNode that also has a value of type T associated with it.
+// 一个 TrieNodeWithValue 是一个 TrieNode，它还具有与之关联的类型 T 的值。
 template <class T>
 class TrieNodeWithValue : public TrieNode {
  public:
-  // Create a trie node with no children and a value.
+  // 创建一个没有子节点但有一个值的 Trie 节点。
   explicit TrieNodeWithValue(std::shared_ptr<T> value) : value_(std::move(value)) { this->is_value_node_ = true; }
 
-  // Create a trie node with children and a value.
+  // 创建一个具有子节点和值的 Trie 节点。
   TrieNodeWithValue(std::map<char, std::shared_ptr<const TrieNode>> children, std::shared_ptr<T> value)
       : TrieNode(std::move(children)), value_(std::move(value)) {
     this->is_value_node_ = true;
   }
 
-  // Override the Clone method to also clone the value.
+  // 覆盖 Clone 方法以同时克隆值。
   //
-  // Note: if you want to convert `unique_ptr` into `shared_ptr`, you can use `std::shared_ptr<T>(std::move(ptr))`.
+  // 注意：如果你想将 `unique_ptr` 转换为 `shared_ptr`，可以使用 `std::shared_ptr<T>(std::move(ptr))`。
   auto Clone() const -> std::unique_ptr<TrieNode> override {
     return std::make_unique<TrieNodeWithValue<T>>(children_, value_);
   }
 
-  // The value associated with this trie node.
+  // 与此 Trie 节点关联的值。
   std::shared_ptr<T> value_;
 };
 
-// A Trie is a data structure that maps strings to values of type T. All operations on a Trie should not
-// modify the trie itself. It should reuse the existing nodes as much as possible, and create new nodes to
-// represent the new trie.
+// 一个 Trie 是将字符串映射到类型为 T 的值的数据结构。对 Trie 的所有操作都不应修改 Trie 本身。应尽可能地重用现有节点，并创建新节点来表示新 Trie。
 //
-// You are NOT allowed to remove any `const` in this project, or use `mutable` to bypass the const checks.
+// 你不允许在此项目中删除任何 `const`，或使用 `mutable` 来绕过 const 检查。
 class Trie {
  private:
-  // The root of the trie.
+  // Trie 的根节点。
   std::shared_ptr<const TrieNode> root_{nullptr};
 
-  // Create a new trie with the given root.
+  // 使用给定的根节点创建一个新的 Trie。
   explicit Trie(std::shared_ptr<const TrieNode> root) : root_(std::move(root)) {}
 
  public:
-  // Create an empty trie.
+  // 创建一个空的 Trie。
   Trie() = default;
 
-  // Get the value associated with the given key.
-  // 1. If the key is not in the trie, return nullptr.
-  // 2. If the key is in the trie but the type is mismatched, return nullptr.
-  // 3. Otherwise, return the value.
+  // 获取与给定键关联的值。
+  // 1. 如果键不在 Trie 中，则返回 nullptr。
+  // 2. 如果键在 Trie 中但类型不匹配，则返回 nullptr。
+  // 3. 否则，返回值。
   template <class T>
   auto Get(std::string_view key) const -> const T *;
 
-  // Put a new key-value pair into the trie. If the key already exists, overwrite the value.
-  // Returns the new trie.
+  // 将新的键值对放入 Trie 中。如果键已经存在，则覆盖值。
+  // 返回新的 Trie。
   template <class T>
   auto Put(std::string_view key, T value) const -> Trie;
 
-  // Remove the key from the trie. If the key does not exist, return the original trie.
-  // Otherwise, returns the new trie.
+  // 从 Trie 中删除键。如果键不存在，则返回原始 Trie。
+  // 否则，返回新的 Trie。
   auto Remove(std::string_view key) const -> Trie;
 
-  // Get the root of the trie, should only be used in test cases.
+  // 获取 Trie 的根节点，仅应在测试用例中使用。
   auto GetRoot() const -> std::shared_ptr<const TrieNode> { return root_; }
 };
 
