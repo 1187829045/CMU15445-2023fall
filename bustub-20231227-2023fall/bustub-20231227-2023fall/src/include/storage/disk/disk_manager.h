@@ -23,88 +23,87 @@
 namespace bustub {
 
 /**
- * DiskManager takes care of the allocation and deallocation of pages within a database. It performs the reading and
- * writing of pages to and from disk, providing a logical file layer within the context of a database management system.
+ * DiskManager 负责在数据库中分配和释放页面。它执行页面到磁盘的读写操作，提供了数据库管理系统内部的逻辑文件层。
  */
 class DiskManager {
  public:
   /**
-   * Creates a new disk manager that writes to the specified database file.
-   * @param db_file the file name of the database file to write to
+   * 创建一个新的磁盘管理器，写入指定的数据库文件。
+   * @param db_file 要写入的数据库文件的文件名
    */
   explicit DiskManager(const std::string &db_file);
 
-  /** FOR TEST / LEADERBOARD ONLY, used by DiskManagerMemory */
+  /** 仅用于测试/排行榜，由 DiskManagerMemory 使用 */
   DiskManager() = default;
 
   virtual ~DiskManager() = default;
 
   /**
-   * Shut down the disk manager and close all the file resources.
+   * 关闭磁盘管理器并关闭所有文件资源。
    */
   void ShutDown();
 
   /**
-   * Write a page to the database file.
-   * @param page_id id of the page
-   * @param page_data raw page data
+   * 将页面写入数据库文件。
+   * @param page_id 页面的 ID
+   * @param page_data 原始页面数据
    */
   virtual void WritePage(page_id_t page_id, const char *page_data);
 
   /**
-   * Read a page from the database file.
-   * @param page_id id of the page
-   * @param[out] page_data output buffer
+   * 从数据库文件读取页面。
+   * @param page_id 页面的 ID
+   * @param[out] page_data 输出缓冲区
    */
   virtual void ReadPage(page_id_t page_id, char *page_data);
 
   /**
-   * Flush the entire log buffer into disk.
-   * @param log_data raw log data
-   * @param size size of log entry
+   * 将整个日志缓冲区刷新到磁盘。
+   * @param log_data 原始日志数据
+   * @param size 日志条目的大小
    */
   void WriteLog(char *log_data, int size);
 
   /**
-   * Read a log entry from the log file.
-   * @param[out] log_data output buffer
-   * @param size size of the log entry
-   * @param offset offset of the log entry in the file
-   * @return true if the read was successful, false otherwise
+   * 从日志文件读取日志条目。
+   * @param[out] log_data 输出缓冲区
+   * @param size 日志条目的大小
+   * @param offset 文件中日志条目的偏移量
+   * @return 如果读取成功，则为 true，否则为 false
    */
   auto ReadLog(char *log_data, int size, int offset) -> bool;
 
-  /** @return the number of disk flushes */
+  /** @return 磁盘刷新的次数 */
   auto GetNumFlushes() const -> int;
 
-  /** @return true iff the in-memory content has not been flushed yet */
+  /** @return 如果内存内容尚未刷新，则为 true */
   auto GetFlushState() const -> bool;
 
-  /** @return the number of disk writes */
+  /** @return 磁盘写入的次数 */
   auto GetNumWrites() const -> int;
 
   /**
-   * Sets the future which is used to check for non-blocking flushes.
-   * @param f the non-blocking flush check
+   * 设置用于检查非阻塞刷新的 future。
+   * @param f 用于非阻塞刷新检查的 future
    */
   inline void SetFlushLogFuture(std::future<void> *f) { flush_log_f_ = f; }
 
-  /** Checks if the non-blocking flush future was set. */
+  /** 检查是否设置了非阻塞刷新 future。 */
   inline auto HasFlushLogFuture() -> bool { return flush_log_f_ != nullptr; }
 
  protected:
   auto GetFileSize(const std::string &file_name) -> int;
-  // stream to write log file
+  // 用于写入日志文件的流
   std::fstream log_io_;
   std::string log_name_;
-  // stream to write db file
+  // 用于写入数据库文件的流
   std::fstream db_io_;
   std::string file_name_;
   int num_flushes_{0};
   int num_writes_{0};
   bool flush_log_{false};
   std::future<void> *flush_log_f_{nullptr};
-  // With multiple buffer pool instances, need to protect file access
+  // 对于多个缓冲池实例，需要保护文件访问
   std::mutex db_io_latch_;
 };
 
