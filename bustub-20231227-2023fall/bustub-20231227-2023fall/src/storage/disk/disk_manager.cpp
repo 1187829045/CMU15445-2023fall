@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// disk_manager.cpp
-//
-// Identification: src/storage/disk/disk_manager.cpp
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #include <sys/stat.h>
 #include <cassert>
 #include <cstring>

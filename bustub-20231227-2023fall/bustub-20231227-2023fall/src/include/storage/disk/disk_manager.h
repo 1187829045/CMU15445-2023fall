@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// disk_manager.h
-//
-// Identification: src/include/storage/disk/disk_manager.h
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #pragma once
 
 #include <atomic>
@@ -22,26 +10,21 @@
 
 namespace bustub {
 
-/**
- * DiskManager 负责在数据库中分配和释放页面。它执行页面到磁盘的读写操作，提供了数据库管理系统内部的逻辑文件层。
- */
+// DiskManager 负责在数据库中分配和释放页面。它执行页面到磁盘的读写操作，提供了数据库管理系统内部的逻辑文件层。
 class DiskManager {
  public:
   /**
    * 创建一个新的磁盘管理器，写入指定的数据库文件。
    * @param db_file 要写入的数据库文件的文件名
    */
-  explicit DiskManager(const std::string &db_file);
+  explicit DiskManager(const std::string &db_file);  //想db_file数据库文件写入数据
 
   /** 仅用于测试/排行榜，由 DiskManagerMemory 使用 */
   DiskManager() = default;
 
   virtual ~DiskManager() = default;
 
-  /**
-   * 关闭磁盘管理器并关闭所有文件资源。
-   */
-  void ShutDown();
+  void ShutDown();  //关闭磁盘管理器并关闭所有文件资源。
 
   /**
    * 将页面写入数据库文件。

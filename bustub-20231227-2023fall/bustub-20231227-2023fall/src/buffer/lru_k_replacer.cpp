@@ -1,14 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// lru_k_replacer.cpp
-//
-// Identification: src/buffer/lru_k_replacer.cpp
-//
-// Copyright (c) 2015-2022, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
 
 #include "buffer/lru_k_replacer.h"
 #include <algorithm>
@@ -24,11 +13,9 @@ LRUKReplacer::LRUKReplacer(size_t num_frames, size_t k) : replacer_size_(num_fra
 auto LRUKReplacer::Evict(frame_id_t *frame_id) -> bool {
   std::lock_guard<std::mutex> lock(latch_);
   current_timestamp_++;
-
   if (node_store_.empty()) {
     return false;
   }
-
   *frame_id = -1;
   std::shared_ptr<LRUKNode> node;
   size_t max_k_distance = 0;
@@ -87,7 +74,7 @@ void LRUKReplacer::RecordAccess(frame_id_t frame_id, [[maybe_unused]] AccessType
   node_store_[frame_id]->RecordAccess(current_timestamp_++);
 }
 
-void LRUKReplacer::SetEvictable(frame_id_t frame_id, bool set_evictable) {
+void LRUKReplacer::SetEvictable(frame_id_t frame_id, bool set_evictable) {  //设置帧frame_id为set_evictable
   std::lock_guard<std::mutex> lock(latch_);
   current_timestamp_++;
 

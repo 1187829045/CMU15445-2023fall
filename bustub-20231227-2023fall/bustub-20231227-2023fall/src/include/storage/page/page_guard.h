@@ -8,6 +8,7 @@ class BufferPoolManager;
 class ReadPageGuard;
 class WritePageGuard;
 
+/** 基本页面保护器 */
 class BasicPageGuard {
  public:
   BasicPageGuard() = default;
@@ -17,69 +18,51 @@ class BasicPageGuard {
   BasicPageGuard(const BasicPageGuard &) = delete;
   auto operator=(const BasicPageGuard &) -> BasicPageGuard & = delete;
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 移动构造函数
    *
-   * @brief Move constructor for BasicPageGuard
-   *
-   * When you call BasicPageGuard(std::move(other_guard)), you
-   * expect that the new guard will behave exactly like the other
-   * one. In addition, the old page guard should not be usable. For
-   * example, it should not be possible to call .Drop() on both page
-   * guards and have the pin count decrease by 2.
+   * 当调用 BasicPageGuard(std::move(other_guard)) 时，预期新的保护器将与其他保护器行为相同。
+   * 此外，旧的页面保护器不应该再可用。例如，不应该同时在两个页面保护器上调用 .Drop() 并使 pin 计数减少 2。
    */
   BasicPageGuard(BasicPageGuard &&that) noexcept;
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 丢弃页面保护器
    *
-   * @brief Drop a page guard
-   *
-   * Dropping a page guard should clear all contents
-   * (so that the page guard is no longer useful), and
-   * it should tell the BPM that we are done using this page,
-   * per the specification in the writeup.
+   * 丢弃页面保护器应该清除所有内容（使得页面保护器不再有用），并告诉 BPM 我们已经完成对该页面的使用，符合规范要求。
    */
   void Drop();
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 移动赋值运算符
    *
-   * @brief Move assignment for BasicPageGuard
-   *
-   * Similar to a move constructor, except that the move
-   * assignment assumes that BasicPageGuard already has a page
-   * being guarded. Think carefully about what should happen when
-   * a guard replaces its held page with a different one, given
-   * the purpose of a page guard.
+   * 类似于移动构造函数，但移动赋值运算符假设 BasicPageGuard 已经有一个被保护的页面。
+   * 考虑到页面保护器的目的，当一个保护器用另一个页面替换其持有的页面时，应该发生什么。
    */
   auto operator=(BasicPageGuard &&that) noexcept -> BasicPageGuard &;
 
-  /** TODO(P1): Add implementation
+  /**
+   * @brief BasicPageGuard 的析构函数
    *
-   * @brief Destructor for BasicPageGuard
-   *
-   * When a page guard goes out of scope, it should behave as if
-   * the page guard was dropped.
+   * 当页面保护器超出范围时，应该表现得像页面保护器被丢弃一样。
    */
   ~BasicPageGuard();
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 将 BasicPageGuard 升级为 ReadPageGuard
    *
-   * @brief Upgrade a BasicPageGuard to a ReadPageGuard
+   * 在升级期间，受保护的页面不会从缓冲池中驱逐，并且在调用此函数后，应使基本页面保护器无效。
    *
-   * The protected page is not evicted from the buffer pool during the upgrade,
-   * and the basic page guard should be made invalid after calling this function.
-   *
-   * @return an upgraded ReadPageGuard
+   * @return 升级后的 ReadPageGuard
    */
   auto UpgradeRead() -> ReadPageGuard;
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 将 BasicPageGuard 升级为 WritePageGuard
    *
-   * @brief Upgrade a BasicPageGuard to a WritePageGuard
+   * 在升级期间，受保护的页面不会从缓冲池中驱逐，并且在调用此函数后，应使基本页面保护器无效。
    *
-   * The protected page is not evicted from the buffer pool during the upgrade,
-   * and the basic page guard should be made invalid after calling this function.
-   *
-   * @return an upgraded WritePageGuard
+   * @return 升级后的 WritePageGuard
    */
   auto UpgradeWrite() -> WritePageGuard;
 
@@ -111,6 +94,7 @@ class BasicPageGuard {
   bool is_dirty_{false};
 };
 
+/** 读取页面保护器 */
 class ReadPageGuard {
  public:
   ReadPageGuard() = default;
@@ -118,42 +102,33 @@ class ReadPageGuard {
   ReadPageGuard(const ReadPageGuard &) = delete;
   auto operator=(const ReadPageGuard &) -> ReadPageGuard & = delete;
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 移动构造函数
    *
-   * @brief Move constructor for ReadPageGuard
-   *
-   * Very similar to BasicPageGuard. You want to create
-   * a ReadPageGuard using another ReadPageGuard. Think
-   * about if there's any way you can make this easier for yourself...
+   * 与 BasicPageGuard 非常相似。您想使用另一个 ReadPageGuard 创建一个 ReadPageGuard。
+   * 想一想是否有任何方法可以使这个过程对自己更容易...
    */
   ReadPageGuard(ReadPageGuard &&that) noexcept;
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 移动赋值运算符
    *
-   * @brief Move assignment for ReadPageGuard
-   *
-   * Very similar to BasicPageGuard. Given another ReadPageGuard,
-   * replace the contents of this one with that one.
+   * 与 BasicPageGuard 非常相似。给定另一个 ReadPageGuard，用该 ReadPageGuard 替换此 ReadPageGuard 的内容。
    */
   auto operator=(ReadPageGuard &&that) noexcept -> ReadPageGuard &;
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 丢弃 ReadPageGuard
    *
-   * @brief Drop a ReadPageGuard
-   *
-   * ReadPageGuard's Drop should behave similarly to BasicPageGuard,
-   * except that ReadPageGuard has an additional resource - the latch!
-   * However, you should think VERY carefully about in which order you
-   * want to release these resources.
+   * ReadPageGuard 的丢弃应与 BasicPageGuard 类似，但 ReadPageGuard 有一个额外的资源 - 闩锁！
+   * 但是，您应该非常仔细地考虑您想释放这些资源的顺序。
    */
   void Drop();
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief ReadPageGuard 的析构函数
    *
-   * @brief Destructor for ReadPageGuard
-   *
-   * Just like with BasicPageGuard, this should behave
-   * as if you were dropping the guard.
+   * 就像 BasicPageGuard 一样，这应该表现得像你丢弃了保护器一样。
    */
   ~ReadPageGuard();
 
@@ -167,10 +142,11 @@ class ReadPageGuard {
   }
 
  private:
-  // You may choose to get rid of this and add your own private variables.
+  // 您可以选择放弃这个并添加自己的私有变量。
   BasicPageGuard guard_;
 };
 
+/** 写入页面保护器 */
 class WritePageGuard {
  public:
   WritePageGuard() = default;
@@ -178,42 +154,33 @@ class WritePageGuard {
   WritePageGuard(const WritePageGuard &) = delete;
   auto operator=(const WritePageGuard &) -> WritePageGuard & = delete;
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 移动构造函数
    *
-   * @brief Move constructor for WritePageGuard
-   *
-   * Very similar to BasicPageGuard. You want to create
-   * a WritePageGuard using another WritePageGuard. Think
-   * about if there's any way you can make this easier for yourself...
+   * 与 BasicPageGuard 非常相似。您想使用另一个 WritePageGuard 创建一个 WritePageGuard。
+   * 想一想是否有任何方法可以使这个过程对自己更容易...
    */
   WritePageGuard(WritePageGuard &&that) noexcept;
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 移动赋值运算符
    *
-   * @brief Move assignment for WritePageGuard
-   *
-   * Very similar to BasicPageGuard. Given another WritePageGuard,
-   * replace the contents of this one with that one.
+   * 与 BasicPageGuard 非常相似。给定另一个 WritePageGuard，用该 WritePageGuard 替换此 WritePageGuard 的内容。
    */
   auto operator=(WritePageGuard &&that) noexcept -> WritePageGuard &;
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief 丢弃 WritePageGuard
    *
-   * @brief Drop a WritePageGuard
-   *
-   * WritePageGuard's Drop should behave similarly to BasicPageGuard,
-   * except that WritePageGuard has an additional resource - the latch!
-   * However, you should think VERY carefully about in which order you
-   * want to release these resources.
+   * WritePageGuard 的丢弃应与 BasicPageGuard 类似，但 WritePageGuard 有一个额外的资源 - 闩锁！
+   * 但是，您应该非常仔细地考虑您想释放这些资源的顺序。
    */
   void Drop();
 
-  /** TODO(P2): Add implementation
+  /**
+   * @brief WritePageGuard 的析构函数
    *
-   * @brief Destructor for WritePageGuard
-   *
-   * Just like with BasicPageGuard, this should behave
-   * as if you were dropping the guard.
+   * 就像 BasicPageGuard 一样，这应该表现得像你丢弃了保护器一样。
    */
   ~WritePageGuard();
 
@@ -234,7 +201,7 @@ class WritePageGuard {
   }
 
  private:
-  // You may choose to get rid of this and add your own private variables.
+  // 您可以选择放弃这个并添加自己的私有变量。
   BasicPageGuard guard_;
 };
 
