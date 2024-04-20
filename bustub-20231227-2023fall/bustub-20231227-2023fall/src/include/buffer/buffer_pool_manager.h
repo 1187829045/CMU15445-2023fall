@@ -46,7 +46,7 @@ class BufferPoolManager {
     @param[out] page_id 创建的页面的 id
     @return 如果无法创建新页面，则返回 nullptr；否则返回指向新页面的指针
    */
-  auto NewPage(page_id_t *page_id) -> Page *;  //将所给参数页面ID设置为新创建页面的ID
+  auto NewPage(page_id_t *page_id) -> Page *;  //指向一个新的页面ID并返回这个页
 
   /**
    * TODO（P2）：添加实现
@@ -75,7 +75,7 @@ class BufferPoolManager {
    * @return 如果无法获取页面，则返回 nullptr；否则返回指向请求页面的指针
    */
   auto FetchPage(page_id_t page_id, AccessType access_type = AccessType::Unknown)
-      -> Page *;  //查询page_id 对应的页帧的页信息,为存在就创建然后再返回
+      -> Page *;  //查询page_id 对应的页的页信息,不存在虚拟页就创建然后再返回
 
   /**
    * TODO（P2）：添加实现
@@ -105,9 +105,8 @@ class BufferPoolManager {
    * @param access_type 页面的访问类型，仅用于排行榜测试。
    * @return 如果页面不在页表中或其固定计数在此调用之前为 <= 0，则返回 false；否则返回 true
    */
-  auto UnpinPage(page_id_t page_id, bool is_dirty, AccessType access_type = AccessType::Unknown)
-      -> bool;  //将页面固定次数减一并更新脏位
-
+  auto UnpinPage(page_id_t page_id, bool is_dirty, AccessType access_type = AccessType::Unknown) -> bool;
+  //从缓冲池中取消固定目标页面。如果页面不在缓冲池中或其固定计数已经为 0，则返回 false。
   /**
    * TODO（P1）：添加实现
    *
@@ -141,7 +140,7 @@ class BufferPoolManager {
   std::unique_ptr<DiskScheduler> disk_scheduler_ __attribute__((__unused__));  // 指向磁盘调度器的指针
   /** 指向日志管理器的指针。对于 P1，请忽略此项。 */
   LogManager *log_manager_ __attribute__((__unused__));
-  std::unordered_map<page_id_t, frame_id_t> page_table_;  //正在使用的页表和页表帧
+  std::unordered_map<page_id_t, frame_id_t> page_table_;  //正在使用的页和物理页的映射关系
   std::unique_ptr<LRUKReplacer> replacer_;                //没有空闲页表帧只能替换，可替换页表帧
   std::list<frame_id_t> free_list_;                       //缓冲池中空闲页表帧
   /** 此锁保护共享数据结构。我们建议更新此注释以描述它所保护的内容。 */

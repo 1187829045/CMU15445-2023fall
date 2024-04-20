@@ -144,7 +144,6 @@ void BufferPoolManager::FlushAllPages() {
     pages_[target_id].is_dirty_ = false;
   }
 }
-
 auto BufferPoolManager::DeletePage(page_id_t page_id) -> bool {
   std::scoped_lock<std::mutex> lock(latch_);
   auto iter = page_table_.find(page_id);
@@ -157,6 +156,7 @@ auto BufferPoolManager::DeletePage(page_id_t page_id) -> bool {
   }
 
   page_table_.erase(page_id);
+  replacer_->Remove(target_id);
   free_list_.push_back(target_id);
   pages_[target_id].ResetMemory();
   // reset metadata of the page
@@ -168,7 +168,6 @@ auto BufferPoolManager::DeletePage(page_id_t page_id) -> bool {
 
   return true;
 }
-
 auto BufferPoolManager::AllocatePage() -> page_id_t { return next_page_id_++; }
 
 auto BufferPoolManager::FetchPageBasic(page_id_t page_id) -> BasicPageGuard {
