@@ -32,7 +32,7 @@
 #include "storage/index/int_comparator.h"
 #include "storage/page/b_plus_tree_page.h"
 #include "type/value.h"
-
+//#define MappingType std::pair<KeyType, ValueType>
 namespace bustub {
 
 static constexpr uint64_t HTABLE_BUCKET_PAGE_METADATA_SIZE = sizeof(uint32_t) * 2;
@@ -44,7 +44,7 @@ constexpr auto HTableBucketArraySize(uint64_t mapping_type_size) -> uint64_t {
 /**
  * Bucket page for extendible hash table.
  */
-template <typename KeyType, typename ValueType, typename KeyComparator>
+template <typename KeyType, typename ValueType, typename KeyComparator>//键值类型，值类型，
 class ExtendibleHTableBucketPage {
  public:
   // Delete all constructor / destructor to ensure memory safety
@@ -53,6 +53,7 @@ class ExtendibleHTableBucketPage {
 
   /**
    * After creating a new bucket page from buffer pool, must call initialize
+   * 从缓冲池创建新的存储桶页面后，必须调用初始化
    * method to set default values
    * @param max_size Max size of the bucket array
    */
@@ -60,10 +61,10 @@ class ExtendibleHTableBucketPage {
 
   /**
    * Lookup a key
-   *
+   *查找一个键
    * @param key key to lookup
    * @param[out] value value to set
-   * @param cmp the comparator
+   * @param cmp the comparator比较器
    * @return true if the key and value are present, false if not found.
    */
   auto Lookup(const KeyType &key, ValueType &value, const KeyComparator &cmp) const -> bool;
@@ -133,7 +134,7 @@ class ExtendibleHTableBucketPage {
 
  private:
   uint32_t size_;
-  uint32_t max_size_;
+  uint32_t max_size_;//Max size of the bucket array
   MappingType array_[HTableBucketArraySize(sizeof(MappingType))];
 };
 
