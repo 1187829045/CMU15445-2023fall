@@ -45,6 +45,7 @@ enum class TransactionState { RUNNING = 0, TAINTED, COMMITTED = 100, ABORTED };
 
 /**
  * Transaction isolation level. READ_UNCOMMITTED will NOT be used in project 3/4 as of Fall 2023.
+ * 事务隔离级别。 自 2023 年秋季起，READ_UNCOMMITTED 将不会在项目 3/4 中使用。
  */
 enum class IsolationLevel { READ_UNCOMMITTED, SNAPSHOT_ISOLATION, SERIALIZABLE };
 

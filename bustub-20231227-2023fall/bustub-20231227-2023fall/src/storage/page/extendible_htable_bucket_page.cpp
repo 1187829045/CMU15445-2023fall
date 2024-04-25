@@ -37,7 +37,7 @@ auto ExtendibleHTableBucketPage<K, V, KC>::Lookup(const K &key, V &value, const 
 
 template <typename K, typename V, typename KC>
 auto ExtendibleHTableBucketPage<K, V, KC>::Insert(const K &key, const V &value, const KC &cmp) -> bool {
-   if (size_ == max_size_) {
+  if (size_ == max_size_) {
     return false;
   }
   for (uint32_t i = 0; i < size_; ++i) {
@@ -53,7 +53,7 @@ auto ExtendibleHTableBucketPage<K, V, KC>::Insert(const K &key, const V &value, 
 
 template <typename K, typename V, typename KC>
 auto ExtendibleHTableBucketPage<K, V, KC>::Remove(const K &key, const KC &cmp) -> bool {
-   uint32_t i = 0;
+  uint32_t i = 0;
   for (; i < size_; ++i) {
     if (cmp(array_[i].first, key) == 0) {
       break;
@@ -62,7 +62,7 @@ auto ExtendibleHTableBucketPage<K, V, KC>::Remove(const K &key, const KC &cmp) -
   if (i == size_) {
     return false;
   }
-   for (uint32_t j = i + 1; j < size_; ++j) {
+  for (uint32_t j = i + 1; j < size_; ++j) {
     array_[j - 1].first = array_[j].first;
     array_[j - 1].second = array_[j].second;
   }
@@ -89,27 +89,27 @@ auto ExtendibleHTableBucketPage<K, V, KC>::KeyAt(uint32_t bucket_idx) const -> K
 
 template <typename K, typename V, typename KC>
 auto ExtendibleHTableBucketPage<K, V, KC>::ValueAt(uint32_t bucket_idx) const -> V {
-   return array_[bucket_idx].second;
+  return array_[bucket_idx].second;
 }
 
 template <typename K, typename V, typename KC>
 auto ExtendibleHTableBucketPage<K, V, KC>::EntryAt(uint32_t bucket_idx) const -> const std::pair<K, V> & {
- return array_[bucket_idx];
+  return array_[bucket_idx];
 }
 
 template <typename K, typename V, typename KC>
 auto ExtendibleHTableBucketPage<K, V, KC>::Size() const -> uint32_t {
-   return size_;
+  return size_;
 }
 
 template <typename K, typename V, typename KC>
 auto ExtendibleHTableBucketPage<K, V, KC>::IsFull() const -> bool {
-   return size_ == max_size_;
+  return size_ == max_size_;
 }
 
 template <typename K, typename V, typename KC>
 auto ExtendibleHTableBucketPage<K, V, KC>::IsEmpty() const -> bool {
-  return size_==0;
+  return size_ == 0;
 }
 
 template class ExtendibleHTableBucketPage<int, int, IntComparator>;

@@ -1,26 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// extendible_htable_bucket_page.h
-//
-// Identification: src/include/storage/page/extendible_htable_bucket_page.h
-//
-// Copyright (c) 2015-2023, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
-/**
- * Bucket page format:
- *  ----------------------------------------------------------------------------
- * | METADATA | KEY(1) + VALUE(1) | KEY(2) + VALUE(2) | ... | KEY(n) + VALUE(n)
- *  ----------------------------------------------------------------------------
- *
- * Metadata format (size in byte, 8 bytes in total):
- *  --------------------------------
- * | CurrentSize (4) | MaxSize (4)
- *  --------------------------------
- */
 #pragma once
 
 #include <optional>
@@ -44,7 +21,7 @@ constexpr auto HTableBucketArraySize(uint64_t mapping_type_size) -> uint64_t {
 /**
  * Bucket page for extendible hash table.
  */
-template <typename KeyType, typename ValueType, typename KeyComparator>//键值类型，值类型，
+template <typename KeyType, typename ValueType, typename KeyComparator>  //键值类型，值类型，
 class ExtendibleHTableBucketPage {
  public:
   // Delete all constructor / destructor to ensure memory safety
@@ -132,9 +109,11 @@ class ExtendibleHTableBucketPage {
    */
   void PrintBucket() const;
 
+  void Clear() { size_ = 0; }
+
  private:
   uint32_t size_;
-  uint32_t max_size_;//Max size of the bucket array
+  uint32_t max_size_;  // Max size of the bucket array
   MappingType array_[HTableBucketArraySize(sizeof(MappingType))];
 };
 

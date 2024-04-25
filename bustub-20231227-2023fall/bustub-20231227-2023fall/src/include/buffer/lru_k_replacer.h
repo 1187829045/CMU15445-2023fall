@@ -20,12 +20,12 @@ class LRUKNode {
 
  public:
   std::list<size_t> history_;  // 存储最近的K个时间戳历史记录
-  size_t k_;                    // K值，表示最近访问的历史记录数量
-  frame_id_t fid_;              // 框架ID，表示页面ID
-  bool is_evictable_{false};    // 是否可淘汰
+  size_t k_;                   // K值，表示最近访问的历史记录数量
+  frame_id_t fid_;             // 框架ID，表示页面ID
+  bool is_evictable_{false};   // 是否可淘汰
 
-  auto GetBackKTimeStamp() { return history_.front(); }  // 获取最早的K个时间戳
-  auto GetLatestTimeStamp() { return history_.front(); } // 获取最新的时间戳
+  auto GetBackKTimeStamp() { return history_.front(); }   // 获取最早的K个时间戳
+  auto GetLatestTimeStamp() { return history_.front(); }  // 获取最新的时间戳
 };
 
 // LRUK替换器类，实现LRU-k替换策略
@@ -61,7 +61,7 @@ class LRUKReplacer {
    * @param[out] frame_id 被驱逐的框架的ID。
    * @return 如果成功驱逐了一个框架，则返回true；如果没有框架可以被驱逐，则返回false。
    */
-  auto Evict(frame_id_t *frame_id) -> bool;//找出可以替换的物理页ID并赋值给参数，若没有可以替换的则返回false
+  auto Evict(frame_id_t *frame_id) -> bool;  //找出可以替换的物理页ID并赋值给参数，若没有可以替换的则返回false
 
   /**
    * TODO(P1): 添加实现
@@ -72,7 +72,10 @@ class LRUKReplacer {
    * @param frame_id 接收新访问的框架的ID。
    * @param access_type 接收的访问类型。此参数仅在排行榜测试中需要。
    */
-  void RecordAccess(frame_id_t frame_id, AccessType access_type = AccessType::Unknown);//记录给定物理页访问的时间戳，若不存在与物理页映射的虚拟页那么创建然后再加入
+  void RecordAccess(
+      frame_id_t frame_id,
+      AccessType access_type =
+          AccessType::Unknown);  //记录给定物理页访问的时间戳，若不存在与物理页映射的虚拟页那么创建然后再加入
 
   /**
    * TODO(P1): 添加实现
@@ -88,7 +91,7 @@ class LRUKReplacer {
    * @param frame_id 要修改其“可淘汰”状态的框架的ID
    * @param set_evictable 指定的框架是否可淘汰
    */
-  void SetEvictable(frame_id_t frame_id, bool set_evictable);//设置物理页ID 的可替换为 set_evictable
+  void SetEvictable(frame_id_t frame_id, bool set_evictable);  //设置物理页ID 的可替换为 set_evictable
 
   /**
    * TODO(P1): 添加实现
@@ -119,7 +122,7 @@ class LRUKReplacer {
   // 学生应该实现这些成员变量！如果开始使用，请删除maybe_unused。
   std::unordered_map<frame_id_t, LRUKNode> node_store_;  // 存储LRUK节点的哈希表
   size_t current_timestamp_{0};                          // 当前时间戳
-  size_t current_size_{0};                                  // 当前大小
+  size_t current_size_{0};                               // 当前大小
   size_t replacer_size_;                                 // 替换器大小
   size_t k_;                                             // k值
   std::mutex latch_;                                     // 互斥量，用于保护并发访问

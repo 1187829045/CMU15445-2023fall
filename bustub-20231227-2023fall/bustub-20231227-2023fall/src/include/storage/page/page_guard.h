@@ -72,7 +72,7 @@ class BasicPageGuard {
 
   template <class T>
   auto As() -> const T * {
-    return reinterpret_cast<const T *>(GetData());//将保护的页面数据转换为指向类型 T 的常量指针
+    return reinterpret_cast<const T *>(GetData());  //将保护的页面数据转换为指向类型 T 的常量指针
   }
 
   auto GetDataMut() -> char * {
@@ -89,7 +89,7 @@ class BasicPageGuard {
   friend class ReadPageGuard;
   friend class WritePageGuard;
 
-  BufferPoolManager *bpm_{nullptr};//缓冲池管理器
+  BufferPoolManager *bpm_{nullptr};  //缓冲池管理器
   Page *page_{nullptr};
   bool is_dirty_{false};
 };

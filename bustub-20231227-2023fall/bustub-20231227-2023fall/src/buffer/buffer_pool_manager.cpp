@@ -53,7 +53,6 @@ auto BufferPoolManager::NewPage(page_id_t *page_id) -> Page * {
   replacer_->RecordAccess(replacement_frame_id);
   pages_[replacement_frame_id].pin_count_++;
   pages_[replacement_frame_id].page_id_ = new_page_id;
-
   return &pages_[replacement_frame_id];
 }
 auto BufferPoolManager::FetchPage(page_id_t page_id, AccessType access_type) -> Page * {
