@@ -1,14 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// insert_plan.h
-//
-// Identification: src/include/execution/plans/insert_plan.h
-//
-// Copyright (c) 2015-2021, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
 
 #pragma once
 
@@ -23,27 +12,27 @@
 namespace bustub {
 
 /**
- * The InsertPlanNode identifies a table into which tuples are inserted.
+ * InsertPlanNode 标识要插入元组的表。
  *
- * The values to be inserted will come from the child of the node.
+ * 将要插入的值将来自节点的子节点。
  */
 class InsertPlanNode : public AbstractPlanNode {
  public:
   /**
-   * Creates a new insert plan node for inserting values from a child plan.
-   * @param child The child plan to obtain values from
-   * @param table_oid The identifier of the table that should be inserted into
+   * 为从子计划插入值创建新的插入计划节点。
+   * @param child 从中获取值的子计划
+   * @param table_oid 应插入的表的标识符
    */
   InsertPlanNode(SchemaRef output, AbstractPlanNodeRef child, table_oid_t table_oid)
       : AbstractPlanNode(std::move(output), {std::move(child)}), table_oid_(table_oid) {}
 
-  /** @return The type of the plan node */
+  /** @return 计划节点的类型 */
   auto GetType() const -> PlanType override { return PlanType::Insert; }
 
-  /** @return The identifier of the table into which tuples are inserted */
+  /** @return 要插入元组的表的标识符 */
   auto GetTableOid() const -> table_oid_t { return table_oid_; }
 
-  /** @return the child plan providing tuples to be inserted */
+  /** @return 提供要插入的元组的子计划 */
   auto GetChildPlan() const -> AbstractPlanNodeRef {
     BUSTUB_ASSERT(GetChildren().size() == 1, "Insert should have only one child plan.");
     return GetChildAt(0);
@@ -51,7 +40,7 @@ class InsertPlanNode : public AbstractPlanNode {
 
   BUSTUB_PLAN_NODE_CLONE_WITH_CHILDREN(InsertPlanNode);
 
-  /** The table to be inserted into. */
+  /** 要插入的表。 */
   table_oid_t table_oid_;
 
  protected:

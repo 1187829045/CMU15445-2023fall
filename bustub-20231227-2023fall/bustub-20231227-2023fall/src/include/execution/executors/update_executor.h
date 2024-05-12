@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// update_executor.h
-//
-// Identification: src/include/execution/executors/update_executor.h
-//
-// Copyright (c) 2015-2021, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #pragma once
 
 #include <memory>
@@ -25,18 +13,18 @@
 namespace bustub {
 
 /**
- * UpdateExecutor executes an update on a table.
- * Updated values are always pulled from a child.
+ * UpdateExecutor 对表执行更新。
+ * 更新的值总是从子项中提取。
  */
 class UpdateExecutor : public AbstractExecutor {
   friend class UpdatePlanNode;
 
  public:
   /**
-   * Construct a new UpdateExecutor instance.
-   * @param exec_ctx The executor context
-   * @param plan The update plan to be executed
-   * @param child_executor The child executor that feeds the update
+   * 构造一个新的UpdateExecutor实例。
+   * @param exec_ctx 执行器上下文
+   * @param plan 要执行的更新计划
+   * @param child_executor 提供更新的子执行器
    */
   UpdateExecutor(ExecutorContext *exec_ctx, const UpdatePlanNode *plan,
                  std::unique_ptr<AbstractExecutor> &&child_executor);
@@ -45,26 +33,27 @@ class UpdateExecutor : public AbstractExecutor {
   void Init() override;
 
   /**
-   * Yield the next tuple from the update.
-   * @param[out] tuple The next tuple produced by the update
-   * @param[out] rid The next tuple RID produced by the update (ignore this)
-   * @return `true` if a tuple was produced, `false` if there are no more tuples
+   * 从更新中产生下一个元组。
+   * @param[out] tuple 更新产生的下一个元组
+   * @param[out] rid 更新产生的下一个元组 RID（忽略此）
+   * 如果生成了元组则返回`true`，如果没有更多的元组则返回`false`
    *
-   * NOTE: UpdateExecutor::Next() does not use the `rid` out-parameter.
+   * 注意：UpdateExecutor::Next() 不使用 `rid` 输出参数。
    */
   auto Next([[maybe_unused]] Tuple *tuple, RID *rid) -> bool override;
 
-  /** @return The output schema for the update */
+  /** @return 更新的输出模式 */
   auto GetOutputSchema() const -> const Schema & override { return plan_->OutputSchema(); }
 
  private:
-  /** The update plan node to be executed */
+  /** 要执行的更新计划节点 */
   const UpdatePlanNode *plan_;
 
-  /** Metadata identifying the table that should be updated */
+  /** 标识应该更新的表的元数据 */
   const TableInfo *table_info_;
-
-  /** The child executor to obtain value from */
+  
+  /** 从中获取值的子执行器 */
   std::unique_ptr<AbstractExecutor> child_executor_;
+  bool is_end_;
 };
 }  // namespace bustub

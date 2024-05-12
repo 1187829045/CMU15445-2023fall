@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// delete_executor.h
-//
-// Identification: src/include/execution/executors/delete_executor.h
-//
-// Copyright (c) 2015-19, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #pragma once
 
 #include <memory>
@@ -24,17 +12,17 @@
 namespace bustub {
 
 /**
- * DeletedExecutor executes a delete on a table.
- * Deleted values are always pulled from a child.
- */
+  * DeletedExecutor 对表执行删除。
+  * 删除的值总是从子项中提取。
+  */
 class DeleteExecutor : public AbstractExecutor {
  public:
-  /**
-   * Construct a new DeleteExecutor instance.
-   * @param exec_ctx The executor context
-   * @param plan The delete plan to be executed
-   * @param child_executor The child executor that feeds the delete
-   */
+ /**
+    * 构造一个新的DeleteExecutor实例。
+    * @param exec_ctx 执行器上下文
+    * @param plan 要执行的删除计划
+    * @param child_executor 提供删除的子执行器
+    */
   DeleteExecutor(ExecutorContext *exec_ctx, const DeletePlanNode *plan,
                  std::unique_ptr<AbstractExecutor> &&child_executor);
 
@@ -42,24 +30,27 @@ class DeleteExecutor : public AbstractExecutor {
   void Init() override;
 
   /**
-   * Yield the number of rows deleted from the table.
-   * @param[out] tuple The integer tuple indicating the number of rows deleted from the table
-   * @param[out] rid The next tuple RID produced by the delete (ignore, not used)
-   * @return `true` if a tuple was produced, `false` if there are no more tuples
-   *
-   * NOTE: DeleteExecutor::Next() does not use the `rid` out-parameter.
-   * NOTE: DeleteExecutor::Next() returns true with the number of deleted rows produced only once.
-   */
+    * 产生从表中删除的行数。
+    * @param[out] tuple 表示从表中删除的行数的整数元组
+    * @param[out] rid 删除产生的下一个元组RID（忽略，未使用）
+    * 如果生成了元组则返回`true`，如果没有更多的元组则返回`false`
+    *
+    * 注意：DeleteExecutor::Next() 不使用 `rid` 输出参数。
+    * 注意：DeleteExecutor::Next() 返回 true，仅生成一次删除的行数。
+    */
   auto Next([[maybe_unused]] Tuple *tuple, RID *rid) -> bool override;
 
-  /** @return The output schema for the delete */
+  /** @return 删除的输出模式 */
   auto GetOutputSchema() const -> const Schema & override { return plan_->OutputSchema(); };
 
  private:
-  /** The delete plan node to be executed */
+  /** 要执行的删除计划节点 */
   const DeletePlanNode *plan_;
 
-  /** The child executor from which RIDs for deleted tuples are pulled */
+  /** 子执行器，从中提取已删除元组的 RID */
   std::unique_ptr<AbstractExecutor> child_executor_;
+
+    /** Whether the Next() has been called before */
+  bool called_;
 };
 }  // namespace bustub

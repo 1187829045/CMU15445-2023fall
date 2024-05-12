@@ -61,7 +61,7 @@ class ExtendibleHTableHeaderPage {
   void PrintHeader() const;  //打印header's occupancy information
 
  private:
-  page_id_t directory_page_ids_[HTABLE_HEADER_ARRAY_SIZE];  //存储页ID
+  page_id_t directory_page_ids_[HTABLE_HEADER_ARRAY_SIZE];  //存储目录页ID
   uint32_t max_depth_;                                      //最大能到达的深度
 };
 

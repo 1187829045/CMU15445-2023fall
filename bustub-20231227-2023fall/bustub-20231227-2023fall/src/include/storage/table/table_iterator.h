@@ -26,7 +26,7 @@ namespace bustub {
 class TableHeap;
 
 /**
- * TableIterator enables the sequential scan of a TableHeap.
+ * TableIterator 允许对 TableHeap 进行顺序扫描。
  */
 class TableIterator {
   friend class Cursor;
@@ -51,9 +51,8 @@ class TableIterator {
   TableHeap *table_heap_;
   RID rid_;
 
-  // When creating table iterator, we will record the maximum RID that we should scan.
-  // Otherwise we will have dead loops when updating while scanning. (In project 4, update should be implemented as
-  // deletion + insertion.)
+  // 创建表迭代器时，我们将记录应扫描的最大RID。
+  // 否则，当扫描时更新时，我们将陷入死循环。（在项目 4 中，应将更新实现为删除+插入。）
   RID stop_at_rid_;
 };
 

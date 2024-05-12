@@ -19,7 +19,7 @@
 #include "common/logger.h"
 
 namespace bustub {
-
+//初始化
 void ExtendibleHTableDirectoryPage::Init(uint32_t max_depth) {
   max_depth_ = max_depth;
   global_depth_ = 0;
@@ -35,7 +35,7 @@ auto ExtendibleHTableDirectoryPage::HashToBucketIndex(uint32_t hash) const -> ui
 auto ExtendibleHTableDirectoryPage::GetMaxDepth() const -> uint32_t { return max_depth_; }
 
 auto ExtendibleHTableDirectoryPage::GetBucketPageId(uint32_t bucket_idx) const -> page_id_t {
-  assert(bucket_idx < pow(2, max_depth_));  //判断下表有没有超限值
+  assert(bucket_idx < pow(2, max_depth_));  //判断下标有没有超限值
   return bucket_page_ids_[bucket_idx];
 }
 
@@ -48,7 +48,7 @@ auto ExtendibleHTableDirectoryPage::GetSplitImageIndex(uint32_t bucket_idx) cons
   auto local_depth_mask = GetLocalDepthMask(bucket_idx);              // 11
   auto local_depth = GetLocalDepth(bucket_idx);                       //假设为2
   return (bucket_idx & local_depth_mask) ^ (1 << (local_depth - 1));  // 10->00 01->11 11->01 00->10
-}
+}  //分裂桶，这点没明白为什么这样，知乎上给的这样解决的思路
 
 auto ExtendibleHTableDirectoryPage::GetGlobalDepth() const -> uint32_t {
   assert(global_depth_ <= max_depth_);
@@ -63,10 +63,13 @@ void ExtendibleHTableDirectoryPage::IncrGlobalDepth() {
   if (global_depth_ == max_depth_) {
     return;
   }
-  // Growing the directory.
+  // 增加目录的全局深度，也就是目前所有桶中的最大深度
   uint32_t pre_size = Size();
   global_depth_++;
   uint32_t curr_size = Size();
+  //增加以为要乘以2就是翻一倍
+  //官网这么指示，要把其扩展后的初始化为相应位置，不清楚为什么这样初始化
+  //是因为对应位置最后xx位是一样的所以可以先这样初始化？？？
   for (uint32_t i = pre_size; i < curr_size; ++i) {
     bucket_page_ids_[i] = bucket_page_ids_[i - pre_size];
     local_depths_[i] = local_depths_[i - pre_size];

@@ -4,9 +4,9 @@
 //
 // tuple.h
 //
-// Identification: src/include/storage/table/tuple.h
+// 标识: src/include/storage/table/tuple.h
 //
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
+// 版权所有（c）2015-2019，卡内基梅隆大学数据库组
 //
 //===----------------------------------------------------------------------===//
 
@@ -27,10 +27,11 @@ const timestamp_t INVALID_TS = -1;
 
 static constexpr size_t TUPLE_META_SIZE = 16;
 
+/** 元组的元信息 */
 struct TupleMeta {
-  /** the ts / txn_id of this tuple. In project 3, simply set it to 0. */
+  /** 元组的时间戳/事务ID。在项目3中，只需将其设置为0。 */
   timestamp_t ts_;
-  /** marks whether this tuple is marked removed from table heap. */
+  /** 标记此元组是否已从表堆中删除。 */
   bool is_deleted_;
 
   friend auto operator==(const TupleMeta &a, const TupleMeta &b) {
@@ -43,9 +44,9 @@ struct TupleMeta {
 static_assert(sizeof(TupleMeta) == TUPLE_META_SIZE);
 
 /**
- * Tuple format:
+ * 元组格式:
  * ---------------------------------------------------------------------
- * | FIXED-SIZE or VARIED-SIZED OFFSET | PAYLOAD OF VARIED-SIZED FIELD |
+ * | 固定大小或可变大小的偏移量 | 可变大小字段的有效载荷 |
  * ---------------------------------------------------------------------
  */
 class Tuple {
@@ -54,54 +55,54 @@ class Tuple {
   friend class TableIterator;
 
  public:
-  // Default constructor (to create a dummy tuple)
+  // 默认构造函数（创建一个虚拟元组）
   Tuple() = default;
 
-  // constructor for table heap tuple
+  // 用于表堆元组的构造函数
   explicit Tuple(RID rid) : rid_(rid) {}
 
   static auto Empty() -> Tuple { return Tuple{RID{INVALID_PAGE_ID, 0}}; }
 
-  // constructor for creating a new tuple based on input value
+  // 基于输入值创建新元组的构造函数
   Tuple(std::vector<Value> values, const Schema *schema);
 
   Tuple(const Tuple &other) = default;
 
-  // move constructor
+  // 移动构造函数
   Tuple(Tuple &&other) noexcept = default;
 
-  // assign operator, deep copy
+  // 分配运算符，深度复制
   auto operator=(const Tuple &other) -> Tuple & = default;
 
-  // move assignment
+  // 移动分配
   auto operator=(Tuple &&other) noexcept -> Tuple & = default;
 
-  // serialize tuple data
+  // 序列化元组数据
   void SerializeTo(char *storage) const;
 
-  // deserialize tuple data(deep copy)
+  // 反序列化元组数据（深度复制）
   void DeserializeFrom(const char *storage);
 
-  // return RID of current tuple
+  // 返回当前元组的RID
   inline auto GetRid() const -> RID { return rid_; }
 
-  // return RID of current tuple
+  // 设置当前元组的RID
   inline auto SetRid(RID rid) { rid_ = rid; }
 
-  // Get the address of this tuple in the table's backing store
+  // 获取元组在表的后端存储中的地址
   inline auto GetData() const -> const char * { return data_.data(); }
 
-  // Get length of the tuple, including varchar length
+  // 获取元组的长度，包括varchar长度
   inline auto GetLength() const -> uint32_t { return data_.size(); }
 
-  // Get the value of a specified column (const)
-  // checks the schema to see how to return the Value.
+  // 获取指定列的值（const）
+  // 检查模式以查看如何返回值。
   auto GetValue(const Schema *schema, uint32_t column_idx) const -> Value;
 
-  // Generates a key tuple given schemas and attributes
+  // 根据模式和属性生成键元组
   auto KeyFromTuple(const Schema &schema, const Schema &key_schema, const std::vector<uint32_t> &key_attrs) -> Tuple;
 
-  // Is the column value null ?
+  // 列值是否为空？
   inline auto IsNull(const Schema *schema, uint32_t column_idx) const -> bool {
     Value value = GetValue(schema, column_idx);
     return value.IsNull();
@@ -112,10 +113,10 @@ class Tuple {
   friend inline auto IsTupleContentEqual(const Tuple &a, const Tuple &b) { return a.data_ == b.data_; }
 
  private:
-  // Get the starting storage address of specific column
+  // 获取特定列的起始存储地址
   auto GetDataPtr(const Schema *schema, uint32_t column_idx) const -> const char *;
 
-  RID rid_{};  // if pointing to the table heap, the rid is valid
+  RID rid_{};  // 如果指向表堆，则RID有效
   std::vector<char> data_;
 };
 

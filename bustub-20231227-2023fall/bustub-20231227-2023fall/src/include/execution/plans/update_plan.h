@@ -23,16 +23,16 @@
 namespace bustub {
 
 /**
- * The UpdatePlanNode identifies a table that should be updated.
- * The tuple(s) to be updated come from the child of the UpdateExecutor.
+ * UpdatePlanNode 标识应该更新的表。
+ * 待更新的元组来自 UpdateExecutor 的子节点。
  */
 class UpdatePlanNode : public AbstractPlanNode {
  public:
   /**
-   * Construct a new UpdatePlanNode instance.
-   * @param child The child plan to obtain tuple from
-   * @param table_oid The identifier of the table that should be updated
-   * @param target_expressions The target expressions for new tuples
+   * 构造一个新的 UpdatePlanNode 实例。
+   * @param child 获取元组的子计划
+   * @param table_oid 应该更新的表的标识符
+   * @param target_expressions 新元组的目标表达式
    */
   UpdatePlanNode(SchemaRef output, AbstractPlanNodeRef child, table_oid_t table_oid,
                  std::vector<AbstractExpressionRef> target_expressions)
@@ -40,24 +40,25 @@ class UpdatePlanNode : public AbstractPlanNode {
         table_oid_{table_oid},
         target_expressions_(std::move(target_expressions)) {}
 
-  /** @return The type of the plan node */
+
+  /** @return 计划节点的类型 */
   auto GetType() const -> PlanType override { return PlanType::Update; }
 
-  /** @return The identifier of the table that should be updated */
+  /** @return 应该更新的表的标识符 */
   auto GetTableOid() const -> table_oid_t { return table_oid_; }
 
-  /** @return The child plan providing tuples to be inserted */
+  /** @return 提供待插入元组的子计划 */
   auto GetChildPlan() const -> AbstractPlanNodeRef {
-    BUSTUB_ASSERT(GetChildren().size() == 1, "UPDATE should have exactly one child plan.");
+    BUSTUB_ASSERT(GetChildren().size() == 1, "UPDATE 应该有一个子计划。");
     return GetChildAt(0);
   }
 
   BUSTUB_PLAN_NODE_CLONE_WITH_CHILDREN(UpdatePlanNode);
 
-  /** The table to be updated. */
+  /** 待更新的表 */
   table_oid_t table_oid_;
 
-  /** The new expression at each column */
+  /** 每列的新表达式 */
   std::vector<AbstractExpressionRef> target_expressions_;
 
  protected:

@@ -6,7 +6,7 @@
 //
 // Identification: src/include/expression/abstract_expression.h
 //
-// Copyright (c) 2015-2021, Carnegie Mellon University Database Group
+// 版权所有 (c) 2015-2021，卡内基梅隆大学数据库组
 //
 //===----------------------------------------------------------------------===//
 
@@ -35,57 +35,57 @@ class AbstractExpression;
 using AbstractExpressionRef = std::shared_ptr<AbstractExpression>;
 
 /**
- * AbstractExpression is the base class of all the expressions in the system.
- * Expressions are modeled as trees, i.e. every expression may have a variable number of children.
+ * AbstractExpression 是系统中所有表达式的基类。
+ * 表达式被建模为树形结构，即每个表达式可能具有可变数量的子表达式。
  */
 class AbstractExpression {
  public:
   /**
-   * Create a new AbstractExpression with the given children and return type.
-   * @param children the children of this abstract expression
-   * @param ret_type the return type of this abstract expression when it is evaluated
+   * 创建一个具有给定子表达式和返回类型的新 AbstractExpression。
+   * @param children 此抽象表达式的子表达式
+   * @param ret_type 当对其进行评估时此抽象表达式的返回类型
    */
   AbstractExpression(std::vector<AbstractExpressionRef> children, TypeId ret_type)
       : children_{std::move(children)}, ret_type_{ret_type} {}
 
-  /** Virtual destructor. */
+  /** 虚析构函数。 */
   virtual ~AbstractExpression() = default;
 
-  /** @return The value obtained by evaluating the tuple with the given schema */
+  /** @return 通过评估具有给定模式的元组获得的值 */
   virtual auto Evaluate(const Tuple *tuple, const Schema &schema) const -> Value = 0;
 
   /**
-   * Returns the value obtained by evaluating a JOIN.
-   * @param left_tuple The left tuple
-   * @param left_schema The left tuple's schema
-   * @param right_tuple The right tuple
-   * @param right_schema The right tuple's schema
-   * @return The value obtained by evaluating a JOIN on the left and right
+   * 返回通过 JOIN 评估获得的值。
+   * @param left_tuple 左元组
+   * @param left_schema 左元组的模式
+   * @param right_tuple 右元组
+   * @param right_schema 右元组的模式
+   * @return 在左和右上评估 JOIN 获得的值
    */
   virtual auto EvaluateJoin(const Tuple *left_tuple, const Schema &left_schema, const Tuple *right_tuple,
                             const Schema &right_schema) const -> Value = 0;
 
-  /** @return the child_idx'th child of this expression */
+  /** @return 此表达式的 child_idx 个子表达式 */
   auto GetChildAt(uint32_t child_idx) const -> const AbstractExpressionRef & { return children_[child_idx]; }
 
-  /** @return the children of this expression, ordering may matter */
+  /** @return 此表达式的子表达式，顺序可能重要 */
   auto GetChildren() const -> const std::vector<AbstractExpressionRef> & { return children_; }
 
-  /** @return the type of this expression if it were to be evaluated */
+  /** @return 如果对其进行评估，则此表达式的类型 */
   virtual auto GetReturnType() const -> TypeId { return ret_type_; }
 
-  /** @return the string representation of the plan node and its children */
-  virtual auto ToString() const -> std::string { return "<unknown>"; }
+  /** @return 计划节点及其子节点的字符串表示 */
+  virtual auto ToString() const -> std::string { return "<未知>"; }
 
-  /** @return a new expression with new children */
+  /** @return 带有新子表达式的新表达式 */
   virtual auto CloneWithChildren(std::vector<AbstractExpressionRef> children) const
       -> std::unique_ptr<AbstractExpression> = 0;
 
-  /** The children of this expression. Note that the order of appearance of children may matter. */
+  /** 此表达式的子表达式。请注意，子表达式的出现顺序可能重要。 */
   std::vector<AbstractExpressionRef> children_;
 
  private:
-  /** The return type of this expression. */
+  /** 此表达式的返回类型。 */
   TypeId ret_type_;
 };
 

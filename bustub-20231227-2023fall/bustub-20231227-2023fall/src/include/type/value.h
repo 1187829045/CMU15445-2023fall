@@ -26,9 +26,9 @@ namespace bustub {
 
 inline auto GetCmpBool(bool boolean) -> CmpBool { return boolean ? CmpBool::CmpTrue : CmpBool::CmpFalse; }
 
-// A value is an abstract class that represents a view over SQL data stored in
-// some materialized state. All values have a type and comparison functions, but
-// subclasses implement other type-specific functionality.
+// 值是一个抽象类，表示存储在 SQL 数据中的视图
+// 一些物化状态。 所有值都有类型和比较函数，但是
+// 子类实现其他特定于类型的功能。
 class Value {
   // Friend Type classes
   friend class Type;
@@ -45,20 +45,21 @@ class Value {
 
  public:
   explicit Value(const TypeId type) : manage_data_(false), type_id_(type) { size_.len_ = BUSTUB_VALUE_NULL; }
-  // BOOLEAN and TINYINT
+  // 布尔类型和字节型整数类型（TINYINT）
   Value(TypeId type, int8_t i);
-  // DECIMAL
+  // 十进制浮点数类型（DECIMAL）
   Value(TypeId type, double d);
   Value(TypeId type, float f);
-  // SMALLINT
+  // 短整型整数类型（SMALLINT）
   Value(TypeId type, int16_t i);
-  // INTEGER
+  // 整型整数类型（INTEGER）
   Value(TypeId type, int32_t i);
-  // BIGINT
+  // 长整型整数类型（BIGINT）
   Value(TypeId type, int64_t i);
-  // TIMESTAMP
+  // 时间戳类型（TIMESTAMP）
   Value(TypeId type, uint64_t i);
-  // VARCHAR
+  // 可变长度字符串类型（VARCHAR）
+
   Value(TypeId type, const char *data, uint32_t len, bool manage_data);
   Value(TypeId type, const std::string &data);
 
@@ -134,11 +135,11 @@ class Value {
   inline auto IsZero() const -> bool { return Type::GetInstance(type_id_)->IsZero(*this); }
   inline auto IsNull() const -> bool { return size_.len_ == BUSTUB_VALUE_NULL; }
 
-  // Serialize this value into the given storage space. The inlined parameter
-  // indicates whether we are allowed to inline this value into the storage
-  // space, or whether we must store only a reference to this value. If inlined
-  // is false, we may use the provided data pool to allocate space for this
-  // value, storing a reference into the allocated pool space in the storage.
+  // 将此值序列化到给定的存储空间中。 内联参数
+  // 指示是否允许我们将该值内联到存储中
+  // 空间，或者我们是否必须仅存储对此值的引用。 如果内联
+  // 为 false，我们可以使用提供的数据池为此分配空间
+  // value，将引用存储到存储中分配的池空间中。
   inline void SerializeTo(char *storage) const { Type::GetInstance(type_id_)->SerializeTo(*this, storage); }
 
   // Deserialize a value of the given type from the given storage space.

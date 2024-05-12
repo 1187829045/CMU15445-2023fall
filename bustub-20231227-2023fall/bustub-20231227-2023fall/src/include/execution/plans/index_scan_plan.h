@@ -10,6 +10,7 @@
 //
 //===----------------------------------------------------------------------===//
 
+//代码定义了一个名为 IndexScanPlanNode 的类，这个类的作用是表示应该进行索引扫描的表，并且可以选择性地应用一个谓词进行扫描。
 #pragma once
 
 #include <string>
@@ -20,19 +21,18 @@
 #include "execution/expressions/abstract_expression.h"
 #include "execution/expressions/constant_value_expression.h"
 #include "execution/plans/abstract_plan.h"
-
 namespace bustub {
 /**
- * IndexScanPlanNode identifies a table that should be scanned with an optional predicate.
+ * IndexScanPlanNode 表示应该使用可选谓词扫描的表。
  */
 class IndexScanPlanNode : public AbstractPlanNode {
  public:
   /**
-   * Creates a new index scan plan node with filter predicate.
-   * @param output The output format of this scan plan node
-   * @param table_oid The identifier of table to be scanned
-   * @param filter_predicate The predicate pushed down to index scan.
-   * @param pred_key The key for point lookup
+   * 创建一个新的索引扫描计划节点，带有过滤谓词。
+   * @param output 此扫描计划节点的输出格式
+   * @param table_oid 要扫描的表的标识符
+   * @param filter_predicate 推送到索引扫描的谓词
+   * @param pred_key 用于点查找的键
    */
   IndexScanPlanNode(SchemaRef output, table_oid_t table_oid, index_oid_t index_oid,
                     AbstractExpressionRef filter_predicate = nullptr, ConstantValueExpression *pred_key = nullptr)
@@ -44,30 +44,30 @@ class IndexScanPlanNode : public AbstractPlanNode {
 
   auto GetType() const -> PlanType override { return PlanType::IndexScan; }
 
-  /** @return the identifier of the table that should be scanned */
+  /** @return 应扫描的表的标识符 */
   auto GetIndexOid() const -> index_oid_t { return index_oid_; }
 
   BUSTUB_PLAN_NODE_CLONE_WITH_CHILDREN(IndexScanPlanNode);
 
-  /** The table which the index is created on. */
+  /** 创建索引的表。 */
   table_oid_t table_oid_;
 
-  /** The index whose tuples should be scanned. */
+  /** 应扫描其元组的索引。 */
   index_oid_t index_oid_;
 
-  /** The predicate to filter in index scan.
-   * For Fall 2023, after you implemented seqscan to indexscan optimizer rule,
-   * we can use this predicate to do index point lookup
+  /** 用于索引扫描中的过滤谓词。
+   * 对于 2023 年秋季学期，在实现了序列扫描到索引扫描的优化器规则后，
+   * 我们可以使用此谓词进行索引点查找。
    */
   AbstractExpressionRef filter_predicate_;
 
   /**
-   * The constant value key to lookup.
-   * For example when dealing "WHERE v = 1" we could store the constant value 1 here
+   * 用于查找的常量值键。
+   * 例如，当处理“WHERE v = 1”时，我们可以在这里存储常量值 1。
    */
   const ConstantValueExpression *pred_key_;
 
-  // Add anything you want here for index lookup
+  // 在此处添加您想要的任何内容以进行索引查找
 
  protected:
   auto PlanNodeToString() const -> std::string override {
@@ -79,3 +79,4 @@ class IndexScanPlanNode : public AbstractPlanNode {
 };
 
 }  // namespace bustub
+

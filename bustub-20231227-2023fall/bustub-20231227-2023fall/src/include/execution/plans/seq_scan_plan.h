@@ -1,15 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// seq_scan_plan.h
-//
-// Identification: src/include/execution/plans/seq_scan_plan.h
-//
-// Copyright (c) 2015-2021, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #pragma once
 
 #include <memory>
@@ -25,14 +13,14 @@
 namespace bustub {
 
 /**
- * The SeqScanPlanNode represents a sequential table scan operation.
+ * SeqScanPlanNode 表示顺序表扫描操作。
  */
 class SeqScanPlanNode : public AbstractPlanNode {
  public:
-  /**
-   * Construct a new SeqScanPlanNode instance.
-   * @param output The output schema of this sequential scan plan node
-   * @param table_oid The identifier of table to be scanned
+  /*
+   * 构造一个新的SeqScanPlanNode实例。
+   * @param output 该顺序扫描计划节点的输出模式
+   * @param table_oid 待扫描表的标识符
    */
   SeqScanPlanNode(SchemaRef output, table_oid_t table_oid, std::string table_name,
                   AbstractExpressionRef filter_predicate = nullptr)
@@ -41,24 +29,24 @@ class SeqScanPlanNode : public AbstractPlanNode {
         table_name_(std::move(table_name)),
         filter_predicate_(std::move(filter_predicate)) {}
 
-  /** @return The type of the plan node */
+  /** @return 计划节点的类型 */
   auto GetType() const -> PlanType override { return PlanType::SeqScan; }
 
-  /** @return The identifier of the table that should be scanned */
+  /** @return 应该扫描的表的标识符 */
   auto GetTableOid() const -> table_oid_t { return table_oid_; }
 
   static auto InferScanSchema(const BoundBaseTableRef &table_ref) -> Schema;
 
   BUSTUB_PLAN_NODE_CLONE_WITH_CHILDREN(SeqScanPlanNode);
 
-  /** The table whose tuples should be scanned */
+  /** 应该扫描其元组的表 */
   table_oid_t table_oid_;
 
-  /** The table name */
+  /** 表名 */
   std::string table_name_;
 
-  /** The predicate to filter in seqscan.
-   * For Fall 2023, We'll enable the MergeFilterScan rule, so we can further support index point lookup
+  /** 用于在顺序扫描中过滤的谓词。
+   * 对于2023年秋季学期，我们将启用MergeFilterScan规则，因此我们可以进一步支持索引点查找
    */
   AbstractExpressionRef filter_predicate_;
 

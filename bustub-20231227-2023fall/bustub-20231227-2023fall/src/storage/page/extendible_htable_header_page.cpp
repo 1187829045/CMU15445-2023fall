@@ -21,14 +21,14 @@ void ExtendibleHTableHeaderPage::Init(uint32_t max_depth) {
     directory_page_ids_[i] = INVALID_PAGE_ID;
   }
 }
-
+// header通过前max_depth_映射到目录页
 auto ExtendibleHTableHeaderPage::HashToDirectoryIndex(uint32_t hash) const -> uint32_t {
   if (max_depth_ == 0) {
     return 0;
   }
   return hash >> (32 - max_depth_);
 }
-
+//有一个数组存储着通过前xx位映射到的下标所对应的页ID
 auto ExtendibleHTableHeaderPage::GetDirectoryPageId(uint32_t directory_idx) const -> uint32_t {
   assert(directory_idx < MaxSize());
   return directory_page_ids_[directory_idx];

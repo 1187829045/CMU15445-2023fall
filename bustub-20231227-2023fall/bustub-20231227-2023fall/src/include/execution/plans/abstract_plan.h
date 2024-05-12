@@ -30,7 +30,7 @@ namespace bustub {
     return std::make_unique<cname>(std::move(plan_node));                                                    \
   }
 
-/** PlanType represents the types of plans that we have in our system. */
+/** PlanType 代表我们系统中的计划类型。 */
 enum class PlanType {
   SeqScan,
   IndexScan,
@@ -57,37 +57,37 @@ class AbstractPlanNode;
 using AbstractPlanNodeRef = std::shared_ptr<const AbstractPlanNode>;
 
 /**
- * AbstractPlanNode represents all the possible types of plan nodes in our system.
- * Plan nodes are modeled as trees, so each plan node can have a variable number of children.
- * Per the Volcano model, the plan node receives the tuples of its children.
- * The ordering of the children may matter.
+ * AbstractPlanNode 表示系统中所有可能类型的计划节点。
+ * 计划节点被建模为树，因此每个计划节点可以有可变数量的子节点。
+ * 根据 Volcano 模型，计划节点接收其子节点的元组。
+ * 子节点的顺序可能很重要。
  */
 class AbstractPlanNode {
  public:
   /**
-   * Create a new AbstractPlanNode with the specified output schema and children.
-   * @param output_schema The schema for the output of this plan node
-   * @param children The children of this plan node
+   * 使用指定的输出模式和子节点创建一个新的 AbstractPlanNode。
+   * @param output_schema 这个计划节点的输出模式
+   * @param children 这个计划节点的子节点
    */
   AbstractPlanNode(SchemaRef output_schema, std::vector<AbstractPlanNodeRef> children)
       : output_schema_(std::move(output_schema)), children_(std::move(children)) {}
 
-  /** Virtual destructor. */
+  /** 虚拟析构函数。 */
   virtual ~AbstractPlanNode() = default;
 
-  /** @return the schema for the output of this plan node */
+  /** @return 这个计划节点的输出模式 */
   auto OutputSchema() const -> const Schema & { return *output_schema_; }
 
-  /** @return the child of this plan node at index child_idx */
+  /** @return 此计划节点在索引 child_idx 处的子节点 */
   auto GetChildAt(uint32_t child_idx) const -> AbstractPlanNodeRef { return children_[child_idx]; }
 
-  /** @return the children of this plan node */
+  /** @return 这个计划节点的子节点 */
   auto GetChildren() const -> const std::vector<AbstractPlanNodeRef> & { return children_; }
 
-  /** @return the type of this plan node */
+  /** @return 此计划节点的类型 */
   virtual auto GetType() const -> PlanType = 0;
 
-  /** @return the string representation of the plan node and its children */
+  /** @return 计划节点及其子节点的字符串表示 */
   auto ToString(bool with_schema = true) const -> std::string {
     if (with_schema) {
       return fmt::format("{} | {}{}", PlanNodeToString(), output_schema_, ChildrenToString(2, with_schema));
@@ -95,24 +95,24 @@ class AbstractPlanNode {
     return fmt::format("{}{}", PlanNodeToString(), ChildrenToString(2, with_schema));
   }
 
-  /** @return the cloned plan node with new children */
+  /** @return 具有新子节点的克隆计划节点 */
   virtual auto CloneWithChildren(std::vector<AbstractPlanNodeRef> children) const
       -> std::unique_ptr<AbstractPlanNode> = 0;
 
   /**
-   * The schema for the output of this plan node. In the volcano model, every plan node will spit out tuples,
-   * and this tells you what schema this plan node's tuples will have.
+   * 这个计划节点的输出模式。在 Volcano 模型中，每个计划节点都会产生元组，
+   * 这告诉您此计划节点的元组将具有什么模式。
    */
   SchemaRef output_schema_;
 
-  /** The children of this plan node. */
+  /** 这个计划节点的子节点。 */
   std::vector<AbstractPlanNodeRef> children_;
 
  protected:
-  /** @return the string representation of the plan node itself */
+  /** @return 计划节点本身的字符串表示 */
   virtual auto PlanNodeToString() const -> std::string { return "<unknown>"; }
 
-  /** @return the string representation of the plan node's children */
+  /** @return 计划节点子节点的字符串表示 */
   auto ChildrenToString(int indent, bool with_schema = true) const -> std::string;
 
  private:

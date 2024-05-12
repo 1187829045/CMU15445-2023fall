@@ -27,12 +27,12 @@
 
 namespace bustub {
 
-static constexpr uint64_t TABLE_PAGE_HEADER_SIZE = 8;
+static constexpr uint64_t TABLE_PAGE_HEADER_SIZE = 8;  // table_page_header_size
 
 /**
- * Slotted page format:
+ * 开槽页面格式：
  *  ---------------------------------------------------------
- *  | HEADER | ... FREE SPACE ... | ... INSERTED TUPLES ... |
+ *  | HEADER | ... FREE SPACE ... | ... INSERTED TUPLES ... |           header   free space    inserted tuples
  *  ---------------------------------------------------------
  *                                ^
  *                                free space pointer
@@ -52,46 +52,46 @@ static constexpr uint64_t TABLE_PAGE_HEADER_SIZE = 8;
 class TablePage {
  public:
   /**
-   * Initialize the TablePage header.
+   * 初始化表页头部。
    */
   void Init();
 
-  /** @return number of tuples in this page */
+  /** @return 页中的元组数量 */
   auto GetNumTuples() const -> uint32_t { return num_tuples_; }
 
-  /** @return the page ID of the next table page */
+  /** @return 表中下一个表页的页面ID */
   auto GetNextPageId() const -> page_id_t { return next_page_id_; }
 
-  /** Set the page id of the next page in the table. */
+  /** 设置表中下一页的页面ID。 */
   void SetNextPageId(page_id_t next_page_id) { next_page_id_ = next_page_id; }
 
-  /** Get the next offset to insert, return nullopt if this tuple cannot fit in this page */
+  /** 获取下一个要插入的偏移量，如果该元组无法适合在此页中，则返回nullopt */
   auto GetNextTupleOffset(const TupleMeta &meta, const Tuple &tuple) const -> std::optional<uint16_t>;
 
   /**
-   * Insert a tuple into the table.
-   * @param tuple tuple to insert
-   * @return true if the insert is successful (i.e. there is enough space)
+   * 向表中插入一个元组。
+   * @param tuple 要插入的元组
+   * @return 如果插入成功（即有足够的空间），则返回true
    */
   auto InsertTuple(const TupleMeta &meta, const Tuple &tuple) -> std::optional<uint16_t>;
 
   /**
-   * Update a tuple.
+   * 更新一个元组。
    */
   void UpdateTupleMeta(const TupleMeta &meta, const RID &rid);
 
   /**
-   * Read a tuple from a table.
+   * 从表中读取一个元组。
    */
   auto GetTuple(const RID &rid) const -> std::pair<TupleMeta, Tuple>;
 
   /**
-   * Read a tuple meta from a table.
+   * 从表中读取一个元组的元信息。
    */
   auto GetTupleMeta(const RID &rid) const -> TupleMeta;
 
   /**
-   * Update a tuple in place.
+   * 在原地更新一个元组。
    */
   void UpdateTupleInPlaceUnsafe(const TupleMeta &meta, const Tuple &tuple, RID rid);
 

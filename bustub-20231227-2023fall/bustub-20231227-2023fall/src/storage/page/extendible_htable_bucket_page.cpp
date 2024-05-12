@@ -15,7 +15,7 @@
 
 #include "common/exception.h"
 #include "storage/page/extendible_htable_bucket_page.h"
-
+//桶页存储着多个键值
 namespace bustub {
 
 template <typename K, typename V, typename KC>

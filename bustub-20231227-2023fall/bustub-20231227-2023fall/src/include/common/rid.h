@@ -22,13 +22,13 @@ namespace bustub {
 
 class RID {
  public:
-  /** The default constructor creates an invalid RID! */
+  /** 默认构造函数创建一个无效的 RID！ */
   RID() = default;
 
   /**
-   * Creates a new Record Identifier for the given page identifier and slot number.
-   * @param page_id page identifier
-   * @param slot_num slot number
+   * 创建给定页标识符和槽编号的新记录标识符。
+   * @param page_id 页标识符
+   * @param slot_num 槽编号
    */
   RID(page_id_t page_id, uint32_t slot_num) : page_id_(page_id), slot_num_(slot_num) {}
 
@@ -47,8 +47,8 @@ class RID {
 
   inline auto ToString() const -> std::string {
     std::stringstream os;
-    os << "page_id: " << page_id_;
-    os << " slot_num: " << slot_num_ << "\n";
+    os << "页标识符: " << page_id_;
+    os << " 槽编号: " << slot_num_ << "\n";
 
     return os.str();
   }
@@ -62,7 +62,7 @@ class RID {
 
  private:
   page_id_t page_id_{INVALID_PAGE_ID};
-  uint32_t slot_num_{0};  // logical offset from 0, 1...
+  uint32_t slot_num_{0};  // 逻辑偏移量从0开始，依次递增...
 };
 
 }  // namespace bustub

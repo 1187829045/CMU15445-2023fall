@@ -9,7 +9,7 @@
 // Copyright (c) 2015-19, Carnegie Mellon University Database Group
 //
 //===----------------------------------------------------------------------===//
-
+//这段代码定义了一个名为 ConstantValueExpression 的类，用于表示常量值表达式。
 #pragma once
 
 #include <memory>
@@ -20,11 +20,11 @@
 
 namespace bustub {
 /**
- * ConstantValueExpression represents constants.
- */
+  * ConstantValueExpression 表示常量。
+  */
 class ConstantValueExpression : public AbstractExpression {
  public:
-  /** Creates a new constant value expression wrapping the given value. */
+  /** 创建一个包装给定值的新常量值表达式。 */
   explicit ConstantValueExpression(const Value &val) : AbstractExpression({}, val.GetTypeId()), val_(val) {}
 
   auto Evaluate(const Tuple *tuple, const Schema &schema) const -> Value override { return val_; }
@@ -34,7 +34,7 @@ class ConstantValueExpression : public AbstractExpression {
     return val_;
   }
 
-  /** @return the string representation of the plan node and its children */
+ /** @return 计划节点及其子节点的字符串表示形式 */
   auto ToString() const -> std::string override { return val_.ToString(); }
 
   BUSTUB_EXPR_CLONE_WITH_CHILDREN(ConstantValueExpression);
