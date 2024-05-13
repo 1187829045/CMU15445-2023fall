@@ -1,1 +1,1 @@
-this is CMU15445 2023 fall 
+This is my own solution for the CMU15445 database course at Cameron University
