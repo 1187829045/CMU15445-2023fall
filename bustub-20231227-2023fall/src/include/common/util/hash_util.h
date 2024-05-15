@@ -9,7 +9,16 @@
 // Copyright (c) 2015-2019, Carnegie Mellon University Database Group
 //
 //===----------------------------------------------------------------------===//
+//段代码定义了一个 HashUtil 类，提供了一些用于哈希计算的静态方法
 
+/*
+HashBytes(const char *bytes, size_t length) -> hash_t：计算给定字节数组的哈希值。
+CombineHashes(hash_t l, hash_t r) -> hash_t：将两个哈希值合并为一个哈希值。
+SumHashes(hash_t l, hash_t r) -> hash_t：计算两个哈希值的和的哈希值。
+Hash(const T *ptr) -> hash_t：计算给定指针的哈希值。
+HashPtr(const T *ptr) -> hash_t：计算指针本身的哈希值。
+HashValue(const Value *val) -> hash_t：计算 Value 对象的哈希值，支持不同类型的值，包括整数、布尔、浮点数、字符串等。
+*/
 #pragma once
 
 #include <algorithm>

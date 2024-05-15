@@ -23,16 +23,16 @@
 namespace bustub {
 
 /**
- * Hash join performs a JOIN operation with a hash table.
+ * 哈希连接执行 JOIN 操作并使用哈希表。
  */
 class HashJoinPlanNode : public AbstractPlanNode {
  public:
   /**
-   * Construct a new HashJoinPlanNode instance.
-   * @param output_schema The output schema for the JOIN
-   * @param children The child plans from which tuples are obtained
-   * @param left_key_expression The expression for the left JOIN key
-   * @param right_key_expression The expression for the right JOIN key
+   * 构造一个新的 HashJoinPlanNode 实例。
+   * @param output_schema JOIN 的输出模式
+   * @param children 从中获取元组的子计划
+   * @param left_key_expression 左侧 JOIN 键的表达式
+   * @param right_key_expression 右侧 JOIN 键的表达式
    */
   HashJoinPlanNode(SchemaRef output_schema, AbstractPlanNodeRef left, AbstractPlanNodeRef right,
                    std::vector<AbstractExpressionRef> left_key_expressions,
@@ -42,38 +42,38 @@ class HashJoinPlanNode : public AbstractPlanNode {
         right_key_expressions_{std::move(right_key_expressions)},
         join_type_(join_type) {}
 
-  /** @return The type of the plan node */
+  /** @return 计划节点的类型 */
   auto GetType() const -> PlanType override { return PlanType::HashJoin; }
 
-  /** @return The expression to compute the left join key */
+  /** @return 计算左连接键的表达式 */
   auto LeftJoinKeyExpressions() const -> const std::vector<AbstractExpressionRef> & { return left_key_expressions_; }
 
-  /** @return The expression to compute the right join key */
+  /** @return 计算右连接键的表达式 */
   auto RightJoinKeyExpressions() const -> const std::vector<AbstractExpressionRef> & { return right_key_expressions_; }
 
-  /** @return The left plan node of the hash join */
+  /** @return 哈希连接的左计划节点 */
   auto GetLeftPlan() const -> AbstractPlanNodeRef {
-    BUSTUB_ASSERT(GetChildren().size() == 2, "Hash joins should have exactly two children plans.");
+    BUSTUB_ASSERT(GetChildren().size() == 2, "哈希连接应该有两个子计划。");
     return GetChildAt(0);
   }
 
-  /** @return The right plan node of the hash join */
+  /** @return 哈希连接的右计划节点 */
   auto GetRightPlan() const -> AbstractPlanNodeRef {
-    BUSTUB_ASSERT(GetChildren().size() == 2, "Hash joins should have exactly two children plans.");
+    BUSTUB_ASSERT(GetChildren().size() == 2, "哈希连接应该有两个子计划。");
     return GetChildAt(1);
   }
 
-  /** @return The join type used in the hash join */
+  /** @return 哈希连接中使用的连接类型 */
   auto GetJoinType() const -> JoinType { return join_type_; };
 
   BUSTUB_PLAN_NODE_CLONE_WITH_CHILDREN(HashJoinPlanNode);
 
-  /** The expression to compute the left JOIN key */
+  /** 计算左 JOIN 键的表达式 */
   std::vector<AbstractExpressionRef> left_key_expressions_;
-  /** The expression to compute the right JOIN key */
+  /** 计算右 JOIN 键的表达式 */
   std::vector<AbstractExpressionRef> right_key_expressions_;
 
-  /** The join type */
+  /** 连接类型 */
   JoinType join_type_;
 
  protected:
