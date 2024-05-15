@@ -3,7 +3,7 @@
 /*
 可以使用 UPDATE 语句来规划 UpdatePlanNode。
  它只有一个子项，其中包含要在表中更新的记录。
-UpdateExecutor 修改指定表中的现有元组。 
+UpdateExecutor 修改指定表中的现有元组。
 执行器将生成一个整数类型的元组作为输出，指示已更新了多少行。
  请记住更新受更新影响的所有索引。
 
@@ -25,11 +25,11 @@ UpdateExecutor::UpdateExecutor(ExecutorContext *exec_ctx, const UpdatePlanNode *
 void UpdateExecutor::Init() {
   child_executor_->Init();
   table_info_ = exec_ctx_->GetCatalog()->GetTable(plan_->GetTableOid());
-  is_end_=false;
+  is_end_ = false;
 }
 
 auto UpdateExecutor::Next([[maybe_unused]] Tuple *tuple, RID *rid) -> bool {
- if (is_end_) {
+  if (is_end_) {
     return false;
   }
   Transaction *tx = GetExecutorContext()->GetTransaction();

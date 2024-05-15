@@ -43,7 +43,7 @@ auto Optimizer::OptimizeMergeFilterScan(const AbstractPlanNodeRef &plan) -> Abst
     }
   }
 
-  return optimized_plan; // 返回优化后的计划
+  return optimized_plan;  // 返回优化后的计划
 }
 
 }  // namespace bustub

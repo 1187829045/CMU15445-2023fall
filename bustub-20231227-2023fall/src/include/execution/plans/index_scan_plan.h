@@ -10,7 +10,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-//代码定义了一个名为 IndexScanPlanNode 的类，这个类的作用是表示应该进行索引扫描的表，并且可以选择性地应用一个谓词进行扫描。
+//代码定义了一个名为 IndexScanPlanNode
+//的类，这个类的作用是表示应该进行索引扫描的表，并且可以选择性地应用一个谓词进行扫描。
 #pragma once
 
 #include <string>
@@ -79,4 +80,3 @@ class IndexScanPlanNode : public AbstractPlanNode {
 };
 
 }  // namespace bustub
-

@@ -7,10 +7,9 @@ namespace bustub {
 
 template <class T>
 auto Trie::Get(std::string_view key) const -> const T * {
-  // You should walk through the trie to find the node corresponding to the key. If the node doesn't exist, return
-  // nullptr. After you find the node, you should use `dynamic_cast` to cast it to `const TrieNodeWithValue<T> *`. If
-  // dynamic_cast returns `nullptr`, it means the type of the value is mismatched, and you should return nullptr.
-  // Otherwise, return the value.
+  // 你应该遍历 Trie 来找到与 key 对应的节点。如果节点不存在，则返回 nullptr。找到节点后，你应该使用 `dynamic_cast`
+  // 将其转换为 `const TrieNodeWithValue<T> *`。如果 dynamic_cast 返回 `nullptr`，则表示值的类型不匹配，应该返回
+  // nullptr。否则，返回值。
 
   if (root_ == nullptr) {
     return nullptr;
@@ -45,10 +44,9 @@ auto Trie::Get(std::string_view key) const -> const T * {
 
 template <class T>
 auto Trie::Put(std::string_view key, T value) const -> Trie {
-  // Note that `T` might be a non-copyable type. Always use `std::move` when creating `shared_ptr` on that value.
+  // 注意，`T` 可能是不可复制的类型。在创建该值的 `shared_ptr` 时始终使用 `std::move`。
 
-  // You should walk through the trie and create new nodes if necessary. If the node corresponding to the key already
-  // exists, you should create a new `TrieNodeWithValue`.
+  // 你应该遍历 Trie，并在必要时创建新节点。如果与 key 对应的节点已存在，则应创建新的 `TrieNodeWithValue`。
 
   std::shared_ptr<TrieNode> new_root;
   if (root_ != nullptr) {
@@ -85,8 +83,8 @@ auto Trie::Put(std::string_view key, T value) const -> Trie {
 }
 
 auto Trie::Remove(std::string_view key) const -> Trie {
-  // You should walk through the trie and remove nodes if necessary. If the node doesn't contain a value any more,
-  // you should convert it to `TrieNode`. If a node doesn't have children any more, you should remove it.
+  // 你应该遍历 Trie，并在必要时移除节点。如果节点不再包含值，则应将其转换为
+  // `TrieNode`。如果节点不再有子节点，则应将其移除。
 
   if (root_ == nullptr) {
     return {};
@@ -133,12 +131,10 @@ auto Trie::Remove(std::string_view key) const -> Trie {
   return Trie(new_node);
 }
 
-// Below are explicit instantiation of template functions.
+// 以下是模板函数的显式实例化。
 //
-// Generally people would write the implementation of template classes and functions in the header file. However, we
-// separate the implementation into a .cpp file to make things clearer. In order to make the compiler know the
-// implementation of the template functions, we need to explicitly instantiate them here, so that they can be picked up
-// by the linker.
+// 通常，人们会将模板类和函数的实现写在头文件中。然而，我们将实现分离到一个 .cpp 文件中，以便更清晰。为了使编译器知道
+// 模板函数的实现，我们需要在此处显式实例化它们，以便它们可以被链接器捕获。
 
 template auto Trie::Put(std::string_view key, uint32_t value) const -> Trie;
 template auto Trie::Get(std::string_view key) const -> const uint32_t *;
@@ -149,7 +145,7 @@ template auto Trie::Get(std::string_view key) const -> const uint64_t *;
 template auto Trie::Put(std::string_view key, std::string value) const -> Trie;
 template auto Trie::Get(std::string_view key) const -> const std::string *;
 
-// If your solution cannot compile for non-copy tests, you can remove the below lines to get partial score.
+// 如果你的解决方案无法为非复制测试编译，可以删除下面的行以获得部分分数。
 
 using Integer = std::unique_ptr<uint32_t>;
 

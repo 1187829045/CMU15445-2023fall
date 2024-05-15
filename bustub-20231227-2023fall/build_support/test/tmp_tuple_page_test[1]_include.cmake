@@ -1,0 +1,5 @@
+if(EXISTS "/home/llb/LLB-windows/BUSTUB2023FALL/bustub-20231227-2023fall/build_support/test/tmp_tuple_page_test[1]_tests.cmake")
+  include("/home/llb/LLB-windows/BUSTUB2023FALL/bustub-20231227-2023fall/build_support/test/tmp_tuple_page_test[1]_tests.cmake")
+else()
+  add_test(tmp_tuple_page_test_NOT_BUILT tmp_tuple_page_test_NOT_BUILT)
+endif()

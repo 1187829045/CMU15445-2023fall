@@ -42,12 +42,12 @@ class IndexMetadata {
    * @param tuple_schema 索引键的模式
    * @param key_attrs 从索引列到基表列的映射
    */
-/*
-index_name 是索引的唯一标识符，用于在数据库中区分不同的索引。
-每个索引都应该有一个独一无二的名称，以便于识别和管理。
-table_name 则是创建索引的表的名称。它指明了在哪个表上创建了这个索引。
-通常，一个表可以拥有多个索引，每个索引都与一个特定的表关联。
-*/
+  /*
+  index_name 是索引的唯一标识符，用于在数据库中区分不同的索引。
+  每个索引都应该有一个独一无二的名称，以便于识别和管理。
+  table_name 则是创建索引的表的名称。它指明了在哪个表上创建了这个索引。
+  通常，一个表可以拥有多个索引，每个索引都与一个特定的表关联。
+  */
   IndexMetadata(std::string index_name, std::string table_name, const Schema *tuple_schema,
                 std::vector<uint32_t> key_attrs, bool is_primary_key)
       : name_(std::move(index_name)),

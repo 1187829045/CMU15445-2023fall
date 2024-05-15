@@ -40,7 +40,6 @@ class UpdatePlanNode : public AbstractPlanNode {
         table_oid_{table_oid},
         target_expressions_(std::move(target_expressions)) {}
 
-
   /** @return 计划节点的类型 */
   auto GetType() const -> PlanType override { return PlanType::Update; }
 

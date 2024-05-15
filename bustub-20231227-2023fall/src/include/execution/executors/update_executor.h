@@ -51,7 +51,7 @@ class UpdateExecutor : public AbstractExecutor {
 
   /** 标识应该更新的表的元数据 */
   const TableInfo *table_info_;
-  
+
   /** 从中获取值的子执行器 */
   std::unique_ptr<AbstractExecutor> child_executor_;
   bool is_end_;

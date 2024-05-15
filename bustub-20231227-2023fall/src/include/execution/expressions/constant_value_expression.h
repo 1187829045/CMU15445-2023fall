@@ -20,8 +20,8 @@
 
 namespace bustub {
 /**
-  * ConstantValueExpression 表示常量。
-  */
+ * ConstantValueExpression 表示常量。
+ */
 class ConstantValueExpression : public AbstractExpression {
  public:
   /** 创建一个包装给定值的新常量值表达式。 */
@@ -34,7 +34,7 @@ class ConstantValueExpression : public AbstractExpression {
     return val_;
   }
 
- /** @return 计划节点及其子节点的字符串表示形式 */
+  /** @return 计划节点及其子节点的字符串表示形式 */
   auto ToString() const -> std::string override { return val_.ToString(); }
 
   BUSTUB_EXPR_CLONE_WITH_CHILDREN(ConstantValueExpression);

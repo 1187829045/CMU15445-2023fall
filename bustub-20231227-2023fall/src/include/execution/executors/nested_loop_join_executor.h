@@ -23,38 +23,51 @@
 namespace bustub {
 
 /**
- * NestedLoopJoinExecutor executes a nested-loop JOIN on two tables.
+ * NestedLoopJoinExecutor执行两个表上的嵌套循环JOIN。
  */
 class NestedLoopJoinExecutor : public AbstractExecutor {
  public:
   /**
-   * Construct a new NestedLoopJoinExecutor instance.
-   * @param exec_ctx The executor context
-   * @param plan The nested loop join plan to be executed
-   * @param left_executor The child executor that produces tuple for the left side of join
-   * @param right_executor The child executor that produces tuple for the right side of join
+   * 构造一个新的NestedLoopJoinExecutor实例。
+   * @param exec_ctx 执行器上下文
+   * @param plan 要执行的嵌套循环连接计划
+   * @param left_executor 产生左连接侧元组的子执行器
+   * @param right_executor 产生右连接侧元组的子执行器
    */
   NestedLoopJoinExecutor(ExecutorContext *exec_ctx, const NestedLoopJoinPlanNode *plan,
                          std::unique_ptr<AbstractExecutor> &&left_executor,
                          std::unique_ptr<AbstractExecutor> &&right_executor);
 
-  /** Initialize the join */
+  /** 初始化连接 */
   void Init() override;
 
+  auto LeftAntiJoinTuple(Tuple *left_tuple) -> Tuple;
+
+  auto InnerJoinTuple(Tuple *left_tuple, Tuple *right_tuple) -> Tuple;
   /**
-   * Yield the next tuple from the join.
-   * @param[out] tuple The next tuple produced by the join
-   * @param[out] rid The next tuple RID produced, not used by nested loop join.
-   * @return `true` if a tuple was produced, `false` if there are no more tuples.
+   * 从连接中产生下一个元组。
+   * @param[out] tuple 连接生成的下一个元组
+   * @param[out] rid 下一个元组的RID，嵌套循环连接不使用。
+   * @return 如果产生了元组，则为“true”，如果没有更多元组，则为“false”。
    */
   auto Next(Tuple *tuple, RID *rid) -> bool override;
 
-  /** @return The output schema for the insert */
+  /** @return 插入的输出模式 */
   auto GetOutputSchema() const -> const Schema & override { return plan_->OutputSchema(); };
 
  private:
-  /** The NestedLoopJoin plan node to be executed. */
+  /** 要执行的NestedLoopJoin计划节点。 */
   const NestedLoopJoinPlanNode *plan_;
+
+  std::unique_ptr<AbstractExecutor> left_executor_;
+  /** The right child executor */
+  std::unique_ptr<AbstractExecutor> right_executor_;
+  /** 左孩子的 Next() 结果 */
+  bool left_ret_;
+  /** 从左孩子获取元组 */
+  Tuple left_tuple_;
+  /** 该左元组是否已与任何右元组匹配 */
+  bool left_done_;
 };
 
 }  // namespace bustub

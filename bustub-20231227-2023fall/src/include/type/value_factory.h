@@ -9,7 +9,7 @@
 // Copyright (c) 2015-2019, Carnegie Mellon University Database Group
 //
 //===----------------------------------------------------------------------===//
-
+//用于创建不同类型的值。
 #pragma once
 
 #include <algorithm>

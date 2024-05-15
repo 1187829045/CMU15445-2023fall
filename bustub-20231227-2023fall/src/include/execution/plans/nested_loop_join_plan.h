@@ -25,16 +25,15 @@
 namespace bustub {
 
 /**
- * NestedLoopJoinPlanNode joins tuples from two child plan nodes.
+ * NestedLoopJoinPlanNode从两个子计划节点中连接元组。
  */
 class NestedLoopJoinPlanNode : public AbstractPlanNode {
  public:
   /**
-   * Construct a new NestedLoopJoinPlanNode instance.
-   * @param output The output format of this nested loop join node
-   * @param children Two sequential scan children plans
-   * @param predicate The predicate to join with, the tuples are joined
-   * if predicate(tuple) = true.
+   * 构造一个新的NestedLoopJoinPlanNode实例。
+   * @param output 此嵌套循环连接节点的输出格式
+   * @param children 两个连续扫描子计划
+   * @param predicate 用于连接的谓词，如果谓词(tuple) = true，则元组被连接。
    */
   NestedLoopJoinPlanNode(SchemaRef output_schema, AbstractPlanNodeRef left, AbstractPlanNodeRef right,
                          AbstractExpressionRef predicate, JoinType join_type)
@@ -42,29 +41,29 @@ class NestedLoopJoinPlanNode : public AbstractPlanNode {
         predicate_(std::move(predicate)),
         join_type_(join_type) {}
 
-  /** @return The type of the plan node */
+  /** @return 计划节点的类型 */
   auto GetType() const -> PlanType override { return PlanType::NestedLoopJoin; }
 
-  /** @return The predicate to be used in the nested loop join */
+  /** @return 用于嵌套循环连接的谓词 */
   auto Predicate() const -> const AbstractExpressionRef & { return predicate_; }
 
-  /** @return The join type used in the nested loop join */
+  /** @return 在嵌套循环连接中使用的连接类型 */
   auto GetJoinType() const -> JoinType { return join_type_; };
 
-  /** @return The left plan node of the nested loop join, by convention it should be the smaller table */
+  /** @return 嵌套循环连接的左侧计划节点，按照约定，它应该是较小的表 */
   auto GetLeftPlan() const -> AbstractPlanNodeRef { return GetChildAt(0); }
 
-  /** @return The right plan node of the nested loop join */
+  /** @return 嵌套循环连接的右侧计划节点 */
   auto GetRightPlan() const -> AbstractPlanNodeRef { return GetChildAt(1); }
 
   static auto InferJoinSchema(const AbstractPlanNode &left, const AbstractPlanNode &right) -> Schema;
 
   BUSTUB_PLAN_NODE_CLONE_WITH_CHILDREN(NestedLoopJoinPlanNode);
 
-  /** The join predicate */
+  /** 连接谓词 */
   AbstractExpressionRef predicate_;
 
-  /** The join type */
+  /** 连接类型 */
   JoinType join_type_;
 
  protected:
