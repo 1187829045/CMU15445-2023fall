@@ -1,22 +1,14 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// hash_join_executor.cpp
-//
-// Identification: src/execution/hash_join_executor.cpp
-//
-// Copyright (c) 2015-2021, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
-
 #include "execution/executors/hash_join_executor.h"
+
 namespace bustub {
 
 HashJoinExecutor::HashJoinExecutor(ExecutorContext *exec_ctx, const HashJoinPlanNode *plan,
                                    std::unique_ptr<AbstractExecutor> &&left_child,
                                    std::unique_ptr<AbstractExecutor> &&right_child)
-    : AbstractExecutor(exec_ctx),left_child_(std::move(left_child)),right_child_(std::move(right_child)),plan_(plan) {
+    : AbstractExecutor(exec_ctx) {
+  this->plan_ = plan;
+  this->left_child_ = std::move(left_child);
+  this->right_child_ = std::move(right_child);
   if (!(plan->GetJoinType() == JoinType::LEFT || plan->GetJoinType() == JoinType::INNER)) {
     // Note for 2023 Fall: You ONLY need to implement left join and inner join.
     throw bustub::NotImplementedException(fmt::format("join type {} not supported", plan->GetJoinType()));
@@ -24,18 +16,27 @@ HashJoinExecutor::HashJoinExecutor(ExecutorContext *exec_ctx, const HashJoinPlan
 }
 
 void HashJoinExecutor::Init() {
-  left_child_->Init();
-  right_child_->Init();
+  // 初始化左右plan的左右孩子
+  this->left_child_->Init();
+  this->right_child_->Init();
+  // 获取左执行器符合条件的元组，left_bool_用于判断左执行器是否还有符合条件的元组
   left_bool_ = left_child_->Next(&left_tuple_, &left_rid_);
-  jht_ = std::make_unique<SimpleHashJoinHashTable>();
+  // NEXT方法的輸出參數，用于存储查询结果
   Tuple right_tuple{};
-  RID right_id{};
-  while(right_child_->Next(right_tuple,right_id)){
+  RID right_rid{};
+  //构建哈希表
+  jht_ = std::make_unique<SimpleHashJoinHashTable>();
+  // 遍历子执行器，将右子执行器中的获取的数据插入到join哈希表中
+  // 不能在HashJoinExecutor执行器的next中完成，因为执行器需要先从子执行器中获取所有数据，然后对这些数据进行join，最后才能产生输出结果
+  while (right_child_->Next(&right_tuple, &right_rid)) {
     jht_->InsertKey(GetRightJoinKey(&right_tuple), right_tuple);
   }
+  // 获取左侧元组的hash key
   auto left_hash_key = GetLeftJoinKey(&left_tuple_);
   // 在哈希表中查找与左侧元组匹配的右侧元组
   right_tuple_ = jht_->GetValue(left_hash_key);
+  //这里必须判断right_tuple_是否为空，否则指针会指向空地址报错
+  // 不为空说明找到了哈希值一样的
   if (right_tuple_ != nullptr) {
     jht_iterator_ = right_tuple_->begin();
     // 标记为true，防止next函数中重复输出
@@ -99,4 +100,5 @@ auto HashJoinExecutor::Next(Tuple *tuple, RID *rid) -> bool {
     }
   }
 }
+
 }  // namespace bustub

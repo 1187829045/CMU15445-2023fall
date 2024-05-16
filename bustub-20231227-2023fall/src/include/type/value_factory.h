@@ -1,14 +1,3 @@
-//===----------------------------------------------------------------------===//
-//
-//                         BusTub
-//
-// value_factory.h
-//
-// Identification: src/include/type/value_factory.h
-//
-// Copyright (c) 2015-2019, Carnegie Mellon University Database Group
-//
-//===----------------------------------------------------------------------===//
 //用于创建不同类型的值。
 #pragma once
 
@@ -34,46 +23,60 @@ namespace bustub {
 
 class ValueFactory {
  public:
+  // 克隆一个 Value 对象，如果需要，可以使用数据池。
   static inline auto Clone(const Value &src, __attribute__((__unused__)) AbstractPool *dataPool = nullptr) -> Value {
     return src.Copy();
   }
 
+  // 获取 TINYINT 类型的 Value 对象。
   static inline auto GetTinyIntValue(int8_t value) -> Value { return {TypeId::TINYINT, value}; }
 
+  // 获取 SMALLINT 类型的 Value 对象。
   static inline auto GetSmallIntValue(int16_t value) -> Value { return {TypeId::SMALLINT, value}; }
 
+  // 获取 INTEGER 类型的 Value 对象。
   static inline auto GetIntegerValue(int32_t value) -> Value { return {TypeId::INTEGER, value}; }
 
+  // 获取 BIGINT 类型的 Value 对象。
   static inline auto GetBigIntValue(int64_t value) -> Value { return {TypeId::BIGINT, value}; }
 
+  // 获取 TIMESTAMP 类型的 Value 对象。
   static inline auto GetTimestampValue(int64_t value) -> Value { return {TypeId::TIMESTAMP, value}; }
 
+  // 获取 DECIMAL 类型的 Value 对象。
   static inline auto GetDecimalValue(double value) -> Value { return {TypeId::DECIMAL, value}; }
 
+  // 获取 BOOLEAN 类型的 Value 对象，根据 CmpBool 枚举值。
   static inline auto GetBooleanValue(CmpBool value) -> Value {
     return {TypeId::BOOLEAN, value == CmpBool::CmpNull ? BUSTUB_BOOLEAN_NULL : static_cast<int8_t>(value)};
   }
 
+  // 获取 BOOLEAN 类型的 Value 对象，根据布尔值。
   static inline auto GetBooleanValue(bool value) -> Value { return {TypeId::BOOLEAN, static_cast<int8_t>(value)}; }
 
+  // 获取 BOOLEAN 类型的 Value 对象，根据 int8_t 值。
   static inline auto GetBooleanValue(int8_t value) -> Value { return {TypeId::BOOLEAN, value}; }
 
+  // 获取 VARCHAR 类型的 Value 对象，使用 C 字符串。
   static inline auto GetVarcharValue(const char *value, bool manage_data,
                                      __attribute__((__unused__)) AbstractPool *pool = nullptr) -> Value {
     auto len = static_cast<uint32_t>(value == nullptr ? 0U : strlen(value) + 1);
     return GetVarcharValue(value, len, manage_data);
   }
 
+  // 获取 VARCHAR 类型的 Value 对象，使用指定长度的 C 字符串。
   static inline auto GetVarcharValue(const char *value, uint32_t len, bool manage_data,
                                      __attribute__((__unused__)) AbstractPool *pool = nullptr) -> Value {
     return {TypeId::VARCHAR, value, len, manage_data};
   }
 
+  // 获取 VARCHAR 类型的 Value 对象，使用 C++ 字符串。
   static inline auto GetVarcharValue(const std::string &value, __attribute__((__unused__)) AbstractPool *pool = nullptr)
       -> Value {
     return {TypeId::VARCHAR, value};
   }
 
+  // 获取指定类型的 NULL 值。
   static inline auto GetNullValueByType(TypeId type_id) -> Value {
     Value ret_value;
     switch (type_id) {
@@ -105,6 +108,7 @@ class ValueFactory {
     return ret_value;
   }
 
+  // 获取指定类型的零值。
   static inline auto GetZeroValueByType(TypeId type_id) -> Value {
     std::string zero_string("0");
 
