@@ -9,7 +9,8 @@
 // Copyright (c) 2015-2021, Carnegie Mellon University Database Group
 //
 //===----------------------------------------------------------------------===//
-
+//这段代码定义了 HashJoinPlanNode 类，这是一个表示哈希连接操作的计划节点。在数据库执行计划中，
+//哈希连接是一种常用的连接算法，通过使用哈希表来执行连接操作。
 #pragma once
 
 #include <string>

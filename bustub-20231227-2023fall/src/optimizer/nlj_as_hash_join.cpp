@@ -17,6 +17,8 @@
 #include "type/type_id.h"
 
 namespace bustub {
+  //这段代码的主要功能是解析一个包含多个条件的连接谓词，并提取出用于哈希连接的左右连接键表达式。
+  //它通过递归处理逻辑表达式（如 AND）和识别比较表达式（如 =）来实现这一点，从而为优化器提供必要的信息以转换嵌套循环连接为哈希连接。
 // 解析一个逻辑表达式，并提取出左右两侧的关键表达式
 void ParseAndExpression(const AbstractExpressionRef &predicate,
                         std::vector<AbstractExpressionRef> *left_key_expressions,
