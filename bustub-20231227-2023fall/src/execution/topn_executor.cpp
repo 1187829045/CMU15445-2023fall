@@ -3,7 +3,7 @@
 namespace bustub {
 TopNExecutor::TopNExecutor(ExecutorContext *exec_ctx, const TopNPlanNode *plan,
                            std::unique_ptr<AbstractExecutor> &&child_executor)
-    : AbstractExecutor(exec_ctx){
+    : AbstractExecutor(exec_ctx) {
   this->plan_ = plan;
   this->child_executor_ = std::move(child_executor);
 }
@@ -39,7 +39,5 @@ auto TopNExecutor::Next(Tuple *tuple, RID *rid) -> bool {
   top_entries_.pop();
   return true;
 }
-auto TopNExecutor::GetNumInHeap() -> size_t {
-     return top_entries_.size();
-}
+auto TopNExecutor::GetNumInHeap() -> size_t { return top_entries_.size(); }
 }  // namespace bustub

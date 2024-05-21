@@ -1,9 +1,9 @@
 #pragma once
 
 #include <memory>
+#include <stack>
 #include <utility>
 #include <vector>
-#include<stack>
 #include "execution/executor_context.h"
 #include "execution/executors/abstract_executor.h"
 #include "execution/plans/seq_scan_plan.h"
@@ -31,7 +31,7 @@ class HeapComparator {
       }
       // 如果是升序（ASC 或 DEFAULT），比较 v1 是否小于 v2（CompareLessThan）
       if (order_type == OrderByType::ASC || order_type == OrderByType::DEFAULT) {
-             return v1.CompareLessThan(v2) == CmpBool::CmpTrue;
+        return v1.CompareLessThan(v2) == CmpBool::CmpTrue;
       }
       // 如果是降序（DESC），比较 v1 是否大于 v2（CompareGreaterThan）
       return v1.CompareGreaterThan(v2) == CmpBool::CmpTrue;

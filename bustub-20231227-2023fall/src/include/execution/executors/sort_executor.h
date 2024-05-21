@@ -57,29 +57,29 @@ class Comparator {
   std::vector<std::pair<OrderByType, AbstractExpressionRef>> order_bys_;
 };
 /**
-  * SortExecutor执行器执行排序。
-  */
+ * SortExecutor执行器执行排序。
+ */
 class SortExecutor : public AbstractExecutor {
  public:
- /**
-    * 构造一个新的SortExecutor实例。
-    * @param exec_ctx 执行器上下文
-    * @param plan 要执行的排序计划
-    */
+  /**
+   * 构造一个新的SortExecutor实例。
+   * @param exec_ctx 执行器上下文
+   * @param plan 要执行的排序计划
+   */
   SortExecutor(ExecutorContext *exec_ctx, const SortPlanNode *plan, std::unique_ptr<AbstractExecutor> &&child_executor);
 
   /** Initialize the sort */
   void Init() override;
 
-/**
-    * 从排序中产生下一个元组。
-    * @param[out] tuple 排序产生的下一个元组
-    * @param[out] rid 排序产生的下一个元组 RID
-    * 如果生成了元组则返回`true`，如果没有更多的元组则返回`false`
-    */
+  /**
+   * 从排序中产生下一个元组。
+   * @param[out] tuple 排序产生的下一个元组
+   * @param[out] rid 排序产生的下一个元组 RID
+   * 如果生成了元组则返回`true`，如果没有更多的元组则返回`false`
+   */
   auto Next(Tuple *tuple, RID *rid) -> bool override;
 
-/** @return 排序的输出模式 */
+  /** @return 排序的输出模式 */
   auto GetOutputSchema() const -> const Schema & override { return plan_->OutputSchema(); }
 
  private:
