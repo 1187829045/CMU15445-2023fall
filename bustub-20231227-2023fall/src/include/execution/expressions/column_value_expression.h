@@ -35,7 +35,7 @@ class ColumnValueExpression : public AbstractExpression {
   ColumnValueExpression(uint32_t tuple_idx, uint32_t col_idx, TypeId ret_type)
       : AbstractExpression({}, ret_type), tuple_idx_{tuple_idx}, col_idx_{col_idx} {}
   //提供对表达式的评估：Evaluate 方法用于在给定元组和模式的情况下计算表达式的值。根据提供的元组和模式，通过调用元组的
-  //GetValue 方法获取相应列的值。
+  // GetValue 方法获取相应列的值。
   auto Evaluate(const Tuple *tuple, const Schema &schema) const -> Value override {
     return tuple->GetValue(&schema, col_idx_);
   }
