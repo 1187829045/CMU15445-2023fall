@@ -1,4 +1,5 @@
 #include "execution/executors/window_function_executor.h"
+#include "execution/executors/aggregation_executor.h"
 #include "execution/executors/sort_executor.h"
 #include "execution/plans/window_plan.h"
 #include "storage/table/tuple.h"
@@ -11,5 +12,5 @@ WindowFunctionExecutor::WindowFunctionExecutor(ExecutorContext *exec_ctx, const 
 
 void WindowFunctionExecutor::Init() {}
 
-auto WindowFunctionExecutor::Next(Tuple *tuple, RID *rid) -> bool {}
+auto WindowFunctionExecutor::Next(Tuple *tuple, RID *rid) -> bool { return false; }
 }  // namespace bustub
