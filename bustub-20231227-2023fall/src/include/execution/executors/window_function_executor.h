@@ -23,7 +23,6 @@
 #include "storage/table/tuple.h"
 
 namespace bustub {
-
 /**
  * The WindowFunctionExecutor executor executes a window function for columns using window function.
  *
@@ -92,11 +91,5 @@ class WindowFunctionExecutor : public AbstractExecutor {
 
   /** The child executor from which tuples are obtained */
   std::unique_ptr<AbstractExecutor> child_executor_;
-
-  /** Store all the Tuples*/
-  std::vector<Tuple> tuples_;
-
-  /** Iterator for all tuples*/
-  std::vector<Tuple>::iterator iter_;
 };
 }  // namespace bustub
