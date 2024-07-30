@@ -1,5 +1,0 @@
-if(EXISTS "/home/llb/LLB-windows/BUSTUB2023FALL/bustub-20231227-2023fall/build_support/test/page_guard_test[1]_tests.cmake")
-  include("/home/llb/LLB-windows/BUSTUB2023FALL/bustub-20231227-2023fall/build_support/test/page_guard_test[1]_tests.cmake")
-else()
-  add_test(page_guard_test_NOT_BUILT page_guard_test_NOT_BUILT)
-endif()
